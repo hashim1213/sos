@@ -15,7 +15,7 @@ export function CTASection() {
               <Link href="/hire">I Need Staff</Link>
             </Button>
             <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-gray-100" asChild>
-              <Link href="/apply">I Want to Work</Link>
+              <Link href="/register-professional">I Want to Work</Link>
             </Button>
           </div>
         </div>

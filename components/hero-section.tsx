@@ -21,7 +21,7 @@ export function HeroSection() {
                 <Link href="/hire">Hire Staff Now</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/apply">Apply as Staff</Link>
+                <Link href="/register-professional">Apply as Staff</Link>
               </Button>
             </div>
           </div>
