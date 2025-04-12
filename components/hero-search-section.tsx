@@ -46,7 +46,7 @@ export function HeroSearchSection() {
                 <Link href="/hire">Hire Staff Now</Link>
               </Button>
               <Button size="lg" variant="secondary" asChild className="bg-white text-primary hover:bg-gray-100">
-                <Link href="/apply">Apply as Staff</Link>
+                <Link href="/register-professional">Apply as Staff</Link>
               </Button>
             </div>
             <div className="mt-4">
