@@ -162,7 +162,7 @@ export default function Home() {
                   className="bg-white text-black p-8 rounded-lg shadow-lg border-t-4 border-red-600 hover:transform hover:scale-105 transition duration-300 cursor-pointer"
                   onClick={() => setUserPath('professional')}
                 >
-                  <h3 className="text-2xl font-bold mb-4">I&apos;m an Event Professional</h3>
+                  <h3 className="text-2xl font-bold mb-4">Apply as a Shifter</h3>
                   <p className="mb-4">Want to offer my services and find work</p>
                   <div className="flex justify-center">
                     <ArrowRight className="text-red-600" size={24} />
@@ -268,7 +268,7 @@ export default function Home() {
                     <Shield className="text-red-600" size={24} />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2 text-black">Vetted Professionals</h3>
+                    <h3 className="text-xl font-bold mb-2 text-black">Vetted Shifters</h3>
                     <p className="text-gray-700">Every staff member and vendor is pre-screened and qualified.</p>
                   </div>
                 </div>
