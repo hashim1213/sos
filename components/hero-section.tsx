@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-white to-gray-50 py-20 md:py-32">
+    <section className="relative overflow-hidden bg-gradient-to-b from-white to-gray-50 py-10 md:py-16">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid gap-6 md:grid-cols-2 md:gap-12">
           <div className="flex flex-col justify-center space-y-4">
@@ -26,7 +26,7 @@ export function HeroSection() {
             </div>
           </div>
           <div className="flex items-center justify-center">
-            <div className="relative h-[350px] w-full overflow-hidden rounded-lg md:h-[450px]">
+            <div className="relative h-[250px] w-full overflow-hidden rounded-lg md:h-[300px]">
               <img
                 src="/placeholder.svg?height=450&width=600"
                 alt="Event staff working at a conference"

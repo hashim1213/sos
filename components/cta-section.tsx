@@ -14,12 +14,7 @@ export function CTASection() {
             <Button size="lg" variant="secondary" asChild className="bg-white text-primary hover:bg-gray-100">
               <Link href="/hire">I Need Staff</Link>
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-primary"
-              asChild
-            >
+            <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-gray-100" asChild>
               <Link href="/apply">I Want to Work</Link>
             </Button>
           </div>
