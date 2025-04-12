@@ -18,21 +18,11 @@ export function HeroSection() {
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
               <Button size="lg" asChild className="bg-primary hover:bg-primary/90">
-                <Link href="/hire">Hire Staff Now</Link>
+                <Link href="/hire">Apply to Hire Staff Now</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/register-professional">Apply as Staff</Link>
+                <Link href="/register-professional">Apply to become Staff</Link>
               </Button>
-            </div>
-          </div>
-          <div className="flex items-center justify-center">
-            <div className="relative h-[250px] w-full overflow-hidden rounded-lg md:h-[300px]">
-              <img
-                src="/placeholder.svg?height=450&width=600"
-                alt="Event staff working at a conference"
-                className="object-cover"
-                style={{ width: "100%", height: "100%" }}
-              />
             </div>
           </div>
         </div>

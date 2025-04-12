@@ -65,7 +65,7 @@ export default function HirePage() {
             <>
               <div className="mb-8">
                 <div className="mb-6 flex items-center justify-between">
-                  <h1 className="text-3xl font-bold text-primary">Hire Staff</h1>
+                  <h1 className="text-3xl font-bold text-primary">Apply to Hire Staff Now</h1>
                   <div className="flex items-center gap-2">
                     <div
                       className={`flex h-8 w-8 items-center justify-center rounded-full ${
