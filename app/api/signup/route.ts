@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
 import { Resend } from 'resend';
-import fs from 'fs';
-import path from 'path';
 
 // Define types for our form data
 interface BaseFormData {
@@ -29,7 +27,6 @@ interface ProfessionalFormData extends BaseFormData {
 type FormData = OrganizerFormData | ProfessionalFormData;
 
 // Initialize Resend with your API key
-// Add a conditional check to handle missing API key gracefully
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
@@ -37,30 +34,13 @@ export async function POST(request: NextRequest) {
   try {
     // Get form data from request
     const formData: FormData = await request.json();
-    
+
     // Add timestamp
     formData.timestamp = new Date().toISOString();
-    
-    // Save to file (for backup)
-    let submissions: FormData[] = [];
-    const dataFilePath = path.join(process.cwd(), 'tmp', 'submissions.json');
-    
-    // Create directory if it doesn't exist
-    if (!fs.existsSync(path.join(process.cwd(), 'tmp'))) {
-      fs.mkdirSync(path.join(process.cwd(), 'tmp'));
-    }
-    
-    if (fs.existsSync(dataFilePath)) {
-      const fileData = fs.readFileSync(dataFilePath, 'utf8');
-      submissions = JSON.parse(fileData);
-    }
-    
-    submissions.push(formData);
-    fs.writeFileSync(dataFilePath, JSON.stringify(submissions, null, 2), 'utf8');
-    
+
     // Format email content
     const emailContent = formatEmailContent(formData);
-    
+
     // Send email if Resend is initialized
     if (resend) {
       const { error } = await resend.emails.send({
@@ -69,15 +49,15 @@ export async function POST(request: NextRequest) {
         subject: `New ${formData.type} signup from ${formData.type === 'organizer' ? formData.email : formData.name}`,
         html: emailContent,
       });
-      
+
       if (error) {
         console.error('Error sending email:', error);
-        // Still return success since we saved the data, but log the email error
+        // Still return success since we processed the submission, but log the email error
       }
     } else {
       console.warn('Resend API key not configured. Email not sent.');
     }
-    
+
     // Return success response
     return NextResponse.json({
       success: true,
@@ -85,6 +65,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error processing form submission:', error);
+    
     // Return error response
     return NextResponse.json(
       { success: false, message: 'Error processing submission' },
