@@ -148,7 +148,7 @@ export function ProfessionalsList({ searchQuery = "" }: ProfessionalsListProps) 
                   </div>
                   <div className="flex flex-col items-center justify-center gap-2 bg-gray-50 p-4 text-center">
                     <div>
-                      <p className="text-2xl font-bold">${professional.hourlyRate}</p>
+                      <p className="text-2xl font-bold">${professional.hourlyRate - 10} - ${professional.hourlyRate}</p>
                       <p className="text-xs text-gray-500">per hour</p>
                     </div>
                     <Button asChild className="bg-red-600 hover:bg-red-700">

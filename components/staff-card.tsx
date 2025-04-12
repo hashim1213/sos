@@ -45,7 +45,7 @@ export function StaffCard({ staff, onSelect }: StaffCardProps) {
           </div>
           <div className="flex flex-col items-center justify-center gap-2 bg-gray-50 p-4 text-center">
             <div>
-              <p className="text-2xl font-bold">${staff.hourlyRate}</p>
+              <p className="text-2xl font-bold">${staff.hourlyRate - 10} - ${staff.hourlyRate}</p>
               <p className="text-xs text-gray-500">per hour</p>
             </div>
             <Button onClick={onSelect} className="bg-primary hover:bg-primary/90">
