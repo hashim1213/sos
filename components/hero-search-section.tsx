@@ -46,13 +46,13 @@ export function HeroSearchSection() {
                 <Link href="/hire">Hire Staff Now</Link>
               </Button>
               <Button size="lg" variant="secondary" asChild className="bg-white text-primary hover:bg-gray-100">
-                <Link href="/register-professional">Apply as Staff</Link>
+                <Link href="/apply">Apply as Staff</Link>
               </Button>
             </div>
             <div className="mt-4">
               <div className="relative h-[200px] w-full overflow-hidden rounded-lg md:hidden">
                 <img
-                  src="/placeholder.svg?height=400&width=600"
+                  src="/placeholder.svg?height=400&width=600&text=Event+Staff"
                   alt="Event staff working at a conference"
                   className="object-cover"
                   style={{ width: "100%", height: "100%" }}

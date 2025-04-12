@@ -80,6 +80,19 @@ export function generateStaffMembers(jobType: string): StaffMember[] {
     "Martin",
   ]
 
+  // When creating staff members, use the available avatars
+  const avatars = [
+    "/images/avatars/alex-johnson.png",
+    "/images/avatars/aisha-patel.png",
+    "/images/avatars/alicia-r.png",
+    "/images/avatars/ambassador-j.png",
+    "/images/avatars/anita-k.png",
+    "/images/avatars/antoine-l.png",
+    "/images/avatars/carlos-rodtriguez.png",
+    "/images/avatars/daniel-m.png",
+    "/images/avatars/daniel-wilson.png",
+  ]
+
   for (let i = 0; i < count; i++) {
     const firstName = firstNames[Math.floor(Math.random() * firstNames.length)]
     const lastName = lastNames[Math.floor(Math.random() * lastNames.length)]
@@ -110,10 +123,13 @@ export function generateStaffMembers(jobType: string): StaffMember[] {
 
     const bio = bioTemplates[Math.floor(Math.random() * bioTemplates.length)]
 
+    // Use one of the available avatars
+    const avatar = avatars[i % avatars.length]
+
     staffMembers.push({
       id: `staff-${i + 1}`,
       name,
-      avatar: `/placeholder.svg?height=64&width=64&text=${firstName[0]}${lastName[0]}`,
+      avatar,
       jobTitle,
       bio,
       rating,

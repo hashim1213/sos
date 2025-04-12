@@ -4,7 +4,7 @@ export const mockProfessionals: Professional[] = [
   {
     id: "prof-1",
     name: "Alex Johnson",
-    avatar: "/placeholder.svg?height=200&width=200&text=AJ",
+    avatar: "/images/avatars/alex-johnson.png",
     jobTitle: "Bartender",
     bio: "Experienced bartender specializing in craft cocktails and high-volume service.",
     about:
@@ -73,7 +73,7 @@ export const mockProfessionals: Professional[] = [
     reviews: [
       {
         name: "Sarah M.",
-        avatar: "/placeholder.svg?height=40&width=40&text=SM",
+        avatar: "/images/avatars/ambassador-j.png",
         rating: 5,
         date: "June 15, 2023",
         comment:
@@ -81,7 +81,7 @@ export const mockProfessionals: Professional[] = [
       },
       {
         name: "David L.",
-        avatar: "/placeholder.svg?height=40&width=40&text=DL",
+        avatar: "/images/avatars/daniel-m.png",
         rating: 5,
         date: "May 3, 2023",
         comment:
@@ -89,7 +89,7 @@ export const mockProfessionals: Professional[] = [
       },
       {
         name: "Jennifer K.",
-        avatar: "/placeholder.svg?height=40&width=40&text=JK",
+        avatar: "/images/avatars/anita-k.png",
         rating: 4,
         date: "April 22, 2023",
         comment:
@@ -100,7 +100,7 @@ export const mockProfessionals: Professional[] = [
   {
     id: "prof-2",
     name: "Maya Patel",
-    avatar: "/placeholder.svg?height=200&width=200&text=MP",
+    avatar: "/images/avatars/aisha-patel.png",
     jobTitle: "Event Coordinator",
     bio: "Detail-oriented event coordinator with experience managing corporate and social events.",
     about:
@@ -191,7 +191,7 @@ export const mockProfessionals: Professional[] = [
   {
     id: "prof-3",
     name: "Carlos Rodriguez",
-    avatar: "/placeholder.svg?height=200&width=200&text=CR",
+    avatar: "/images/avatars/carlos-rodtriguez.png",
     jobTitle: "Security Specialist",
     bio: "Former military personnel providing professional security services for events of all sizes.",
     about:
@@ -288,7 +288,7 @@ export const mockProfessionals: Professional[] = [
   {
     id: "prof-4",
     name: "Emma Wilson",
-    avatar: "/placeholder.svg?height=200&width=200&text=EW",
+    avatar: "/images/avatars/daniel-wilson.png",
     jobTitle: "Server/Waitstaff",
     bio: "Professional server with fine dining experience and excellent customer service skills.",
     about:
@@ -380,7 +380,7 @@ export const mockProfessionals: Professional[] = [
   {
     id: "prof-5",
     name: "Jackson Lee",
-    avatar: "/placeholder.svg?height=200&width=200&text=JL",
+    avatar: "/images/avatars/antoine-l.png",
     jobTitle: "AV Technician",
     bio: "Experienced audio-visual technician specializing in event production and technical support.",
     about:

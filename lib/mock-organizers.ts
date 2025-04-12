@@ -40,7 +40,7 @@ export const mockOrganizers: Organizer[] = [
   {
     id: "org-1",
     name: "Emily Thompson",
-    avatar: "/placeholder.svg?height=200&width=200&text=ET",
+    avatar: "/images/avatars/alicia-r.png",
     companyName: "Elegant Affairs",
     bio: "Luxury wedding and event planner with over 10 years of experience creating memorable celebrations.",
     about:
@@ -113,7 +113,7 @@ export const mockOrganizers: Organizer[] = [
     reviews: [
       {
         name: "Rebecca W.",
-        avatar: "/placeholder.svg?height=40&width=40&text=RW",
+        avatar: "/images/avatars/alicia-r.png",
         rating: 5,
         date: "July 10, 2023",
         comment:
@@ -121,7 +121,7 @@ export const mockOrganizers: Organizer[] = [
       },
       {
         name: "Michael S.",
-        avatar: "/placeholder.svg?height=40&width=40&text=MS",
+        avatar: "/images/avatars/daniel-m.png",
         rating: 5,
         date: "April 3, 2023",
         comment:
@@ -129,7 +129,7 @@ export const mockOrganizers: Organizer[] = [
       },
       {
         name: "Jennifer L.",
-        avatar: "/placeholder.svg?height=40&width=40&text=JL",
+        avatar: "/images/avatars/anita-k.png",
         rating: 4,
         date: "October 15, 2022",
         comment:
@@ -140,7 +140,7 @@ export const mockOrganizers: Organizer[] = [
   {
     id: "org-2",
     name: "Marcus Chen",
-    avatar: "/placeholder.svg?height=200&width=200&text=MC",
+    avatar: "/images/avatars/daniel-m.png",
     companyName: "Elevate Events",
     bio: "Corporate event specialist with expertise in conferences, product launches, and company retreats.",
     about:
@@ -240,7 +240,7 @@ export const mockOrganizers: Organizer[] = [
   {
     id: "org-3",
     name: "Sophia Rodriguez",
-    avatar: "/placeholder.svg?height=200&width=200&text=SR",
+    avatar: "/images/avatars/aisha-patel.png",
     companyName: "Festival Collective",
     bio: "Festival and large-scale event producer specializing in music, arts, and cultural celebrations.",
     about:
@@ -347,7 +347,7 @@ export const mockOrganizers: Organizer[] = [
   {
     id: "org-4",
     name: "Daniel Wilson",
-    avatar: "/placeholder.svg?height=200&width=200&text=DW",
+    avatar: "/images/avatars/daniel-wilson.png",
     companyName: "Precision Events",
     bio: "Specialized in high-security events, political functions, and VIP gatherings requiring discretion and precision.",
     about:
@@ -454,7 +454,7 @@ export const mockOrganizers: Organizer[] = [
   {
     id: "org-5",
     name: "Aisha Patel",
-    avatar: "/placeholder.svg?height=200&width=200&text=AP",
+    avatar: "/images/avatars/aisha-patel.png",
     companyName: "Vibrant Celebrations",
     bio: "Specializing in South Asian weddings and cultural celebrations with modern flair and traditional respect.",
     about:

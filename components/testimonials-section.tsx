@@ -21,7 +21,7 @@ export function TestimonialsSection() {
             </p>
             <div className="flex items-center gap-4">
               <div className="h-10 w-10 overflow-hidden rounded-full bg-gray-200">
-                <img src="/placeholder.svg?height=40&width=40" alt="Sarah J." className="h-full w-full object-cover" />
+                <img src="/images/avatars/ambassador-j.png" alt="Sarah J." className="h-full w-full object-cover" />
               </div>
               <div>
                 <p className="font-medium">Sarah J.</p>
@@ -41,7 +41,7 @@ export function TestimonialsSection() {
             </p>
             <div className="flex items-center gap-4">
               <div className="h-10 w-10 overflow-hidden rounded-full bg-gray-200">
-                <img src="/placeholder.svg?height=40&width=40" alt="Marcus T." className="h-full w-full object-cover" />
+                <img src="/images/avatars/antoine-l.png" alt="Marcus T." className="h-full w-full object-cover" />
               </div>
               <div>
                 <p className="font-medium">Marcus T.</p>
@@ -61,11 +61,7 @@ export function TestimonialsSection() {
             </p>
             <div className="flex items-center gap-4">
               <div className="h-10 w-10 overflow-hidden rounded-full bg-gray-200">
-                <img
-                  src="/placeholder.svg?height=40&width=40"
-                  alt="Jennifer L."
-                  className="h-full w-full object-cover"
-                />
+                <img src="/images/avatars/anita-k.png" alt="Jennifer L." className="h-full w-full object-cover" />
               </div>
               <div>
                 <p className="font-medium">Jennifer L.</p>
