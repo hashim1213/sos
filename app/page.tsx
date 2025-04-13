@@ -428,7 +428,7 @@ export default function Home() {
                         <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white mr-3">
                           <Check size={16} />
                         </div>
-                        <h4 className="font-bold">Flexible Schedule</h4>
+                        <h4 className="font-bold text-gray-600">Flexible Schedule</h4>
                       </div>
                       <p className="text-gray-700 pl-11">Work when you want, for events that fit your availability.</p>
                     </div>
@@ -438,7 +438,7 @@ export default function Home() {
                         <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white mr-3">
                           <Check size={16} />
                         </div>
-                        <h4 className="font-bold">Competitive Pay</h4>
+                        <h4 className="font-bold text-gray-600">Competitive Pay</h4>
                       </div>
                       <p className="text-gray-700 pl-11">Earn premium rates, especially for emergency staffing needs.</p>
                     </div>
@@ -448,7 +448,7 @@ export default function Home() {
                         <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white mr-3">
                           <Check size={16} />
                         </div>
-                        <h4 className="font-bold">Same-Day Payment</h4>
+                        <h4 className="font-bold text-gray-600">Same-Day Payment</h4>
                       </div>
                       <p className="text-gray-700 pl-11">Get paid quickly after completing your assignments.</p>
                     </div>
@@ -458,7 +458,7 @@ export default function Home() {
                         <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white mr-3">
                           <Check size={16} />
                         </div>
-                        <h4 className="font-bold">Build Your Reputation</h4>
+                        <h4 className="font-bold text-gray-600">Build Your Reputation</h4>
                       </div>
                       <p className="text-gray-700 pl-11">Earn ratings and reviews to increase your visibility and booking potential.</p>
                     </div>
