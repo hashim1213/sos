@@ -13,7 +13,7 @@ export function Footer() {
                 alt="StaffOnSite Logo"
                 className="h-6 w-auto"
               />
-              <span className="text-xl font-bold text-white">StaffOnSite</span>
+              <span className="text-xl font-bold text-white">StaffOnShift</span>
             </Link>
             <p className="mb-4 max-w-xs">
               Connecting event organizers with qualified staff for seamless event experiences.
@@ -129,7 +129,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 border-t border-gray-800 pt-8 text-center">
-          <p>&copy; {new Date().getFullYear()} StaffOnSite. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} StaffOnShift. All rights reserved.</p>
           <div className="mt-2 flex justify-center gap-4">
             <Link href="#" className="text-sm hover:text-primary">
               Privacy Policy

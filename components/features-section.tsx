@@ -5,7 +5,7 @@ export function FeaturesSection() {
     <section id="features" className="bg-white py-20">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Why Choose StaffOnSite</h2>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Why Choose StaffOnShift</h2>
           <p className="mt-4 text-lg text-gray-500">
             We make it easy to find qualified staff for your events or find flexible work opportunities.
           </p>

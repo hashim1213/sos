@@ -29,7 +29,7 @@ export function Navbar() {
               alt="StaffOnSite Logo"
               className="h-6 w-auto"
             />
-            <span className="text-xl font-bold text-white">StaffOnSite</span>
+            <span className="text-xl font-bold text-white"></span>
           </Link>
         </div>
         <nav className="hidden md:flex md:items-center md:gap-6">

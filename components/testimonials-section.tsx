@@ -6,7 +6,7 @@ export function TestimonialsSection() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-12 text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">What Our Users Say</h2>
-          <p className="mt-4 text-lg text-gray-500">Hear from event organizers and staff who have used StaffOnSite</p>
+          <p className="mt-4 text-lg text-gray-500">Hear from event organizers and staff who have used StaffOnShift</p>
         </div>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           <div className="rounded-lg border bg-card p-6 shadow-sm">
@@ -16,7 +16,7 @@ export function TestimonialsSection() {
               ))}
             </div>
             <p className="mb-4 text-gray-600">
-              "StaffOnSite saved our charity gala! With just 48 hours notice, we found 5 professional servers and a
+              "StaffOnShift saved our charity gala! With just 48 hours notice, we found 5 professional servers and a
               bartender. The quality was outstanding."
             </p>
             <div className="flex items-center gap-4">
@@ -56,7 +56,7 @@ export function TestimonialsSection() {
               ))}
             </div>
             <p className="mb-4 text-gray-600">
-              "We use StaffOnSite for all our corporate events now. The verification process gives us confidence in who
+              "We use StaffOnShift for all our corporate events now. The verification process gives us confidence in who
               we're hiring, and the quality is consistent."
             </p>
             <div className="flex items-center gap-4">

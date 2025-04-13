@@ -226,7 +226,7 @@ export function ProfessionalsList({ searchQuery, filters }: ProfessionalsListPro
                       <p className="text-xs text-gray-500">per hour</p>
                     </div>
                     <Button className="bg-red-600 hover:bg-red-700" onClick={() => handleBookNow(professional)}>
-                      Book Now
+                      Request Now
                     </Button>
                   </div>
                 </div>
@@ -249,7 +249,7 @@ export function ProfessionalsList({ searchQuery, filters }: ProfessionalsListPro
           {isBookingInProgress && (
             <div className="flex flex-col items-center justify-center py-8">
               <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-              <DialogTitle className="text-center">Processing Your Booking</DialogTitle>
+              <DialogTitle className="text-center">Your Request is waiting to be confirmed...</DialogTitle>
               <DialogDescription className="text-center mt-2">
                 Please wait while we confirm availability...
               </DialogDescription>
@@ -262,7 +262,7 @@ export function ProfessionalsList({ searchQuery, filters }: ProfessionalsListPro
                 <CheckCircle className="h-12 w-12 text-green-600" />
               </div>
 
-              <DialogTitle className="text-center text-2xl">Booking Confirmed!</DialogTitle>
+              <DialogTitle className="text-center text-2xl">Shifter has confirmed booking!</DialogTitle>
 
               <div className="mt-6 text-center">
                 <motion.div
@@ -271,7 +271,7 @@ export function ProfessionalsList({ searchQuery, filters }: ProfessionalsListPro
                   transition={{ duration: 0.5 }}
                 >
                   <p className="text-lg font-medium text-gray-900">{bookingProfessional.name} is on the way!</p>
-                  <p className="mt-2 text-green-600 font-semibold">Estimated arrival: 5 minutes</p>
+                  <p className="mt-2 text-green-600 font-semibold">Estimated arrival: less than 1 hour</p>
                 </motion.div>
 
                 <div className="mt-6 bg-gray-50 p-4 rounded-lg">

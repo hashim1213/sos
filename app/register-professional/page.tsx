@@ -753,7 +753,7 @@ export default function RegisterProfessionalPage() {
                               I understand that background checks may be required *
                             </label>
                             <p className="text-xs text-gray-500">
-                              StaffOnSite may require background checks for certain positions to ensure the safety and
+                              StaffOnShift may require background checks for certain positions to ensure the safety and
                               security of events.
                             </p>
                           </div>
@@ -782,7 +782,7 @@ export default function RegisterProfessionalPage() {
               </div>
               <h2 className="text-2xl font-bold">Registration Complete!</h2>
               <p className="mt-4 text-gray-600">
-                Thank you for registering as a professional with StaffOnSite. Your profile has been submitted for
+                Thank you for registering as a professional with StaffOnShift. Your profile has been submitted for
                 review. We'll notify you once your profile is approved and visible to event organizers.
               </p>
               <div className="mt-8 space-y-4">

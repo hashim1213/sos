@@ -126,7 +126,7 @@ export default function HirePage() {
                   <CheckCircle2 className="h-12 w-12 text-green-600" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold">Booking Confirmed!</h2>
+              <h2 className="text-2xl font-bold">Shifter has confirmed booking!</h2>
               <p className="mt-4 text-gray-600">
                 Your booking with {selectedStaff?.name} has been successfully confirmed for{" "}
                 {jobDetails?.date.toLocaleDateString()} at {jobDetails?.startTime}.

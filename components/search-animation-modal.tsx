@@ -360,7 +360,7 @@ export function SearchAnimationModal({ isOpen, onClose, searchType, searchQuery 
                   className="mt-6 text-center"
                 >
                   <p className="font-medium text-green-600">
-                    Found {foundProfiles.length} matches! Redirecting to results...
+                    Found matches! Redirecting to results...
                   </p>
                 </motion.div>
               )}
