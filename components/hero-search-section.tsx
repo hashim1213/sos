@@ -14,7 +14,7 @@ export function HeroSearchSection() {
   const [activeTab, setActiveTab] = useState("professionals")
   const [professionalQuery, setProfessionalQuery] = useState("")
   const [organizerQuery, setOrganizerQuery] = useState("")
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState(true)
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const [searchType, setSearchType] = useState<"professionals" | "organizers">("professionals")
   const [searchQuery, setSearchQuery] = useState("")
 
