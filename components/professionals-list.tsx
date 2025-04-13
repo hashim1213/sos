@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar, Clock, MapPin, Star } from "lucide-react"
+import { Calendar, Clock, MapPin, Star, CheckCircle, Loader2 } from "lucide-react"
 import { mockProfessionals } from "@/lib/mock-professionals"
 import type { Professional } from "@/lib/types"
 import type { FilterValues } from "@/components/professional-filters"
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { motion } from "@/components/ui/motion"
 
 interface ProfessionalsListProps {
   searchQuery: string
@@ -19,6 +21,10 @@ interface ProfessionalsListProps {
 export function ProfessionalsList({ searchQuery, filters }: ProfessionalsListProps) {
   const [sortBy, setSortBy] = useState("rating")
   const [professionals, setProfessionals] = useState<Professional[]>(mockProfessionals)
+  const [bookingProfessional, setBookingProfessional] = useState<Professional | null>(null)
+  const [isBookingConfirmed, setIsBookingConfirmed] = useState(false)
+  const [isBookingInProgress, setIsBookingInProgress] = useState(false)
+  const [showDialog, setShowDialog] = useState(false)
 
   // Apply filters and search whenever they change
   useEffect(() => {
@@ -113,6 +119,25 @@ export function ProfessionalsList({ searchQuery, filters }: ProfessionalsListPro
     setProfessionals(sorted)
   }
 
+  const handleBookNow = (professional: Professional) => {
+    setBookingProfessional(professional)
+    setIsBookingInProgress(true)
+    setShowDialog(true)
+
+    // Simulate booking process
+    setTimeout(() => {
+      setIsBookingInProgress(false)
+      setIsBookingConfirmed(true)
+    }, 1500)
+  }
+
+  const handleCloseDialog = () => {
+    setShowDialog(false)
+    setBookingProfessional(null)
+    setIsBookingConfirmed(false)
+    setIsBookingInProgress(false)
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -197,11 +222,11 @@ export function ProfessionalsList({ searchQuery, filters }: ProfessionalsListPro
                   </div>
                   <div className="flex flex-col items-center justify-center gap-2 bg-gray-50 p-4 text-center">
                     <div>
-                      <p className="text-2xl font-bold">${professional.hourlyRate - 10} - ${professional.hourlyRate}</p>
+                      <p className="text-2xl font-bold">${professional.hourlyRate - 8} - ${professional.hourlyRate}</p>
                       <p className="text-xs text-gray-500">per hour</p>
                     </div>
-                    <Button asChild className="bg-red-600 hover:bg-red-700">
-                      <Link href={`/professionals/${professional.id}`}>View Profile</Link>
+                    <Button className="bg-red-600 hover:bg-red-700" onClick={() => handleBookNow(professional)}>
+                      Book Now
                     </Button>
                   </div>
                 </div>
@@ -217,6 +242,65 @@ export function ProfessionalsList({ searchQuery, filters }: ProfessionalsListPro
           </div>
         )}
       </div>
+
+      {/* Booking Confirmation Dialog */}
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent className="sm:max-w-md">
+          {isBookingInProgress && (
+            <div className="flex flex-col items-center justify-center py-8">
+              <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+              <DialogTitle className="text-center">Processing Your Booking</DialogTitle>
+              <DialogDescription className="text-center mt-2">
+                Please wait while we confirm availability...
+              </DialogDescription>
+            </div>
+          )}
+
+          {isBookingConfirmed && bookingProfessional && (
+            <div className="flex flex-col items-center justify-center py-6">
+              <div className="mb-6 rounded-full bg-green-100 p-3">
+                <CheckCircle className="h-12 w-12 text-green-600" />
+              </div>
+
+              <DialogTitle className="text-center text-2xl">Booking Confirmed!</DialogTitle>
+
+              <div className="mt-6 text-center">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <p className="text-lg font-medium text-gray-900">{bookingProfessional.name} is on the way!</p>
+                  <p className="mt-2 text-green-600 font-semibold">Estimated arrival: 5 minutes</p>
+                </motion.div>
+
+                <div className="mt-6 bg-gray-50 p-4 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-gray-500">Professional:</span>
+                    <span className="font-medium">{bookingProfessional.name}</span>
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-gray-500">Service:</span>
+                    <span className="font-medium">{bookingProfessional.jobTitle}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500">Hourly Rate:</span>
+                    <span className="font-medium">${bookingProfessional.hourlyRate}/hr</span>
+                  </div>
+                </div>
+
+                <p className="mt-6 text-sm text-gray-500">
+                  You'll receive a confirmation email with all the details shortly.
+                </p>
+              </div>
+
+              <Button className="mt-6 w-full bg-primary hover:bg-primary/90" onClick={handleCloseDialog}>
+                Done
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
