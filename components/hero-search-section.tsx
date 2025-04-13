@@ -73,6 +73,7 @@ export function HeroSearchSection() {
                     <div className="flex flex-col gap-4 md:flex-row">
                       <div className="flex-1">
                         <Input
+                          style={{color: "black"}}
                           placeholder="Search for bartenders, servers, security staff..."
                           value={professionalQuery}
                           onChange={(e) => setProfessionalQuery(e.target.value)}
@@ -123,6 +124,7 @@ export function HeroSearchSection() {
                     <div className="flex flex-col gap-4 md:flex-row">
                       <div className="flex-1">
                         <Input
+                          style={{color: "black"}}
                           placeholder="Search for wedding planners, corporate event managers..."
                           value={organizerQuery}
                           onChange={(e) => setOrganizerQuery(e.target.value)}
