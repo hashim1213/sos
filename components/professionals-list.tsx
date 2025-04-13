@@ -9,37 +9,91 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar, Clock, MapPin, Star } from "lucide-react"
 import { mockProfessionals } from "@/lib/mock-professionals"
 import type { Professional } from "@/lib/types"
+import type { FilterValues } from "@/components/professional-filters"
 
 interface ProfessionalsListProps {
-  searchQuery?: string
+  searchQuery: string
+  filters?: FilterValues
 }
 
-export function ProfessionalsList({ searchQuery = "" }: ProfessionalsListProps) {
+export function ProfessionalsList({ searchQuery, filters }: ProfessionalsListProps) {
   const [sortBy, setSortBy] = useState("rating")
   const [professionals, setProfessionals] = useState<Professional[]>(mockProfessionals)
-  const [filteredProfessionals, setFilteredProfessionals] = useState<Professional[]>(mockProfessionals)
 
-  // Filter professionals based on search query
+  // Apply filters and search whenever they change
   useEffect(() => {
+    let filtered = [...mockProfessionals]
+
+    // Apply search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
-      const filtered = mockProfessionals.filter(
-        (professional) =>
-          professional.name.toLowerCase().includes(query) ||
-          professional.jobTitle.toLowerCase().includes(query) ||
-          professional.bio.toLowerCase().includes(query) ||
-          professional.skills.some((skill) => skill.toLowerCase().includes(query)),
+      filtered = filtered.filter(
+        (prof) =>
+          prof.name.toLowerCase().includes(query) ||
+          prof.jobTitle.toLowerCase().includes(query) ||
+          prof.bio.toLowerCase().includes(query) ||
+          prof.skills.some((skill) => skill.toLowerCase().includes(query)),
       )
-      setFilteredProfessionals(filtered)
-    } else {
-      setFilteredProfessionals(mockProfessionals)
     }
-  }, [searchQuery])
+
+    // Apply filters if they exist
+    if (filters) {
+      // Job type filter
+      if (filters.jobTypes.length > 0) {
+        filtered = filtered.filter((prof) => {
+          const jobTitle = prof.jobTitle.toLowerCase()
+          return filters.jobTypes.some((type) => jobTitle.includes(type.toLowerCase()))
+        })
+      }
+
+      // Price range filter
+      filtered = filtered.filter(
+        (prof) => prof.hourlyRate >= filters.priceRange[0] && prof.hourlyRate <= filters.priceRange[1],
+      )
+
+      // Date filter - in a real app, you would check availability for the specific date
+      if (filters.date) {
+        filtered = filtered.filter((prof) => {
+          // Check if the professional has any availability
+          return Object.values(prof.availability.schedule).some((hours : any) => hours !== "")
+        })
+      }
+
+      // Experience level filter
+      if (filters.experienceLevels.length > 0) {
+        filtered = filtered.filter((prof) => {
+          if (filters.experienceLevels.includes("beginner") && prof.yearsExperience <= 1) return true
+          if (
+            filters.experienceLevels.includes("intermediate") &&
+            prof.yearsExperience > 1 &&
+            prof.yearsExperience <= 3
+          )
+            return true
+          if (filters.experienceLevels.includes("experienced") && prof.yearsExperience > 3 && prof.yearsExperience <= 5)
+            return true
+          if (filters.experienceLevels.includes("expert") && prof.yearsExperience > 5) return true
+          return false
+        })
+      }
+
+      // Rating filter
+      if (filters.ratings.length > 0) {
+        filtered = filtered.filter((prof) => {
+          if (filters.ratings.includes("4plus") && prof.rating >= 4) return true
+          if (filters.ratings.includes("3plus") && prof.rating >= 3) return true
+          return false
+        })
+      }
+    }
+
+    // Apply sorting
+    sortProfessionals(sortBy, filtered)
+  }, [searchQuery, filters, sortBy])
 
   // Sort professionals based on selected option
-  const sortProfessionals = (value: string) => {
+  const sortProfessionals = (value: string, professionalsToSort = professionals) => {
     setSortBy(value)
-    const sorted = [...filteredProfessionals]
+    const sorted = [...professionalsToSort]
 
     switch (value) {
       case "rating":
@@ -56,20 +110,15 @@ export function ProfessionalsList({ searchQuery = "" }: ProfessionalsListProps) 
         break
     }
 
-    setFilteredProfessionals(sorted)
+    setProfessionals(sorted)
   }
-
-  // Apply sorting when filtered professionals change
-  useEffect(() => {
-    sortProfessionals(sortBy)
-  }, [filteredProfessionals.length])
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h2 className="text-lg font-semibold">Available Professionals</h2>
-          <p className="text-sm text-gray-500">{filteredProfessionals.length} professionals found</p>
+          <p className="text-sm text-gray-500">{professionals.length} professionals found</p>
         </div>
         <div className="w-full sm:w-48">
           <Select value={sortBy} onValueChange={sortProfessionals}>
@@ -86,9 +135,9 @@ export function ProfessionalsList({ searchQuery = "" }: ProfessionalsListProps) 
         </div>
       </div>
 
-      {filteredProfessionals.length > 0 ? (
-        <div className="space-y-4">
-          {filteredProfessionals.map((professional) => (
+      <div className="space-y-4">
+        {professionals.length > 0 ? (
+          professionals.map((professional) => (
             <Card key={professional.id} className="overflow-hidden">
               <CardContent className="p-0">
                 <div className="grid md:grid-cols-[1fr_auto]">
@@ -158,16 +207,16 @@ export function ProfessionalsList({ searchQuery = "" }: ProfessionalsListProps) 
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
-      ) : (
-        <div className="rounded-lg border border-dashed p-8 text-center">
-          <p className="text-gray-500">No professionals match your search criteria.</p>
-          <Button variant="link" onClick={() => setFilteredProfessionals(mockProfessionals)} className="mt-2">
-            Clear filters and try again
-          </Button>
-        </div>
-      )}
+          ))
+        ) : (
+          <div className="rounded-lg border border-dashed p-8 text-center">
+            <p className="text-gray-500">No professionals match your search criteria.</p>
+            <p className="mt-2 text-sm text-gray-400">
+              Try adjusting your filters or search terms to see more results.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

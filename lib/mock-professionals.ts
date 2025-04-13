@@ -476,7 +476,7 @@ export const mockProfessionals: Professional[] = [
     ],
   },
   {
-      id: "prof-10",
+      id: "prof-6",
       name: "Maria Thompson",
       avatar: "/images/avatars/alex-johnson.png",
       jobTitle: "Event Server",
@@ -528,7 +528,7 @@ export const mockProfessionals: Professional[] = [
       reviews: [],
     },
     {
-      id: "prof-11",
+      id: "prof-7",
       name: "Daniel Reyes",
       avatar: "/images/avatars/alex-johnson.png",
       jobTitle: "Setup Crew / General Labour",
@@ -580,7 +580,7 @@ export const mockProfessionals: Professional[] = [
       reviews: [],
     },
     {
-      id: "prof-12",
+      id: "prof-8",
       name: "Emily Nguyen",
       avatar: "/images/avatars/alex-johnson.png",
       jobTitle: "Event Host / Greeter",
@@ -631,7 +631,7 @@ export const mockProfessionals: Professional[] = [
       reviews: [],
     },
     {
-      id: "prof-14",
+      id: "prof-9",
       name: "Jamal Lewis",
       avatar: "/images/avatars/alex-johnson.png",
       jobTitle: "Security / Event Safety",
@@ -682,4 +682,77 @@ export const mockProfessionals: Professional[] = [
       ],
       reviews: [],
     },  
+    {
+      id: "prof-10",
+      name: "Cole Kinney",
+      avatar: "/images/avatars/cole-kinney.png",
+      jobTitle: "Security",
+      bio: "Professional security guard licensed in Manitoba, specializing in crowd control, access management, and guest safety at public and private events.",
+      about:
+        "With over 6 years of experience in Manitoba’s event security scene, I’ve worked everything from festivals and university functions to high-profile private events.\n\nI’m licensed and trained in emergency response and de-escalation techniques, and I’m committed to keeping guests safe without disrupting the atmosphere of your event.",
+      rating: 5.0,
+      reviewCount: 35,
+      hourlyRate: 25,
+      yearsExperience: 6,
+      skills: [
+        "Crowd Control",
+        "Access Point Monitoring",
+        "De-escalation",
+        "Emergency Evacuation Procedures",
+        "Mobile Patrol",
+        "Guest Relations"
+      ],
+      location: "Winnipeg, MB",
+      contact: {
+        email: "cole.kinney@example.com",
+        phone: "(204) 555-8821"
+      },
+      availability: {
+        nextAvailable: "Available this weekend",
+        preferredHours: "Evenings & Weekends",
+        noticeRequired: "24–48 hours notice preferred",
+        schedule: [
+          { day: "Monday", hours: "" },
+          { day: "Tuesday", hours: "4PM – 10PM" },
+          { day: "Wednesday", hours: "4PM – 10PM" },
+          { day: "Thursday", hours: "" },
+          { day: "Friday", hours: "6PM – 2AM" },
+          { day: "Saturday", hours: "6PM – 2AM" },
+          { day: "Sunday", hours: "12PM – 6PM" }
+        ]
+      },
+      experience: [
+        {
+          position: "Site Supervisor",
+          company: "Prairie Shield Security",
+          period: "2020 – Present",
+          description: "Led teams providing crowd control and VIP security at large-scale events across Winnipeg."
+        },
+        {
+          position: "Security Guard",
+          company: "True North Protection Group",
+          period: "2017 – 2020",
+          description: "Patrolled venues, managed entrances, and worked with law enforcement during high-traffic events."
+        }
+      ],
+      certifications: [
+        {
+          name: "Manitoba Security Guard License",
+          issuer: "Justice Manitoba – Private Investigators and Security Guards Program",
+          year: "2017"
+        },
+        {
+          name: "Standard First Aid & CPR Level C",
+          issuer: "Red Cross Manitoba",
+          year: "2023"
+        },
+        {
+          name: "Nonviolent Crisis Intervention Training",
+          issuer: "CPI Canada",
+          year: "2021"
+        }
+      ],
+      reviews: []
+    }
+    
 ]

@@ -11,26 +11,29 @@ import { ProfessionalFilters } from "@/components/professional-filters"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search } from "lucide-react"
+import type { FilterValues } from "@/components/professional-filters"
 
 export default function ProfessionalsPage() {
   const searchParams = useSearchParams()
   const queryParam = searchParams.get("q") || ""
 
   const [searchQuery, setSearchQuery] = useState(queryParam)
+  const [filters, setFilters] = useState<FilterValues | undefined>(undefined)
 
   // Initialize with search query from URL
   useEffect(() => {
     if (queryParam) {
       setSearchQuery(queryParam)
-      // You could pass this to the ProfessionalsList component
-      // or implement filtering logic here
     }
   }, [queryParam])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     // The search query is already set via the input onChange
-    // You could trigger filtering here or let the child components handle it
+  }
+
+  const handleFiltersChange = (newFilters: FilterValues) => {
+    setFilters(newFilters)
   }
 
   return (
@@ -68,8 +71,8 @@ export default function ProfessionalsPage() {
 
         <div className="container mx-auto px-4 py-12 md:px-6">
           <div className="grid gap-8 md:grid-cols-[300px_1fr]">
-            <ProfessionalFilters />
-            <ProfessionalsList searchQuery={searchQuery} />
+            <ProfessionalFilters onFiltersChange={handleFiltersChange} />
+            <ProfessionalsList searchQuery={searchQuery} filters={filters} />
           </div>
         </div>
       </main>
