@@ -18,7 +18,7 @@ export default function Home() {
   const [experience, setExperience] = useState('');
   const [aboutExperience, setAboutExperience] = useState('');
   const [agreeToCheck, setAgreeToCheck] = useState(false);
-  
+
   // Form submission status tracking
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
@@ -27,27 +27,27 @@ export default function Home() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitError('');
-    
+
     try {
       // Determine which form is being submitted based on userPath
-      const formData = userPath === 'organizer' 
-        ? { 
-            type: 'organizer',
-            email, 
-            eventType 
-          } 
+      const formData = userPath === 'organizer'
+        ? {
+          type: 'organizer',
+          email,
+          eventType
+        }
         : {
-            type: 'professional',
-            name: professionalName,
-            email: professionalEmail,
-            phone,
-            city,
-            skill,
-            experience,
-            aboutExperience,
-            agreeToCheck
-          };
-      
+          type: 'professional',
+          name: professionalName,
+          email: professionalEmail,
+          phone,
+          city,
+          skill,
+          experience,
+          aboutExperience,
+          agreeToCheck
+        };
+
       // Send the data to our API route
       const response = await fetch('/api/signup', {
         method: 'POST',
@@ -56,16 +56,16 @@ export default function Home() {
         },
         body: JSON.stringify(formData),
       });
-      
+
       const result = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(result.message || 'Something went wrong');
       }
-      
+
       // Success! Show confirmation 
       setSubmitted(true);
-      
+
       // Reset all form fields
       setEmail('');
       setEventType('');
@@ -77,7 +77,7 @@ export default function Home() {
       setExperience('');
       setAboutExperience('');
       setAgreeToCheck(false);
-      
+
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitError(error instanceof Error ? error.message : 'Failed to submit. Please try again.');
@@ -98,7 +98,7 @@ export default function Home() {
                 alt="SOS Logo"
                 className="h-8 w-auto mr-2"
               />
-            
+
             </div>
 
             {/* Mobile menu button */}
@@ -115,6 +115,15 @@ export default function Home() {
               <a href="#benefits" className="hover:text-red-400 transition text-sm">Benefits</a>
               <a href="#verification" className="hover:text-red-400 transition text-sm">Verification</a>
               <a href="#testimonials" className="hover:text-red-400 transition text-sm">Testimonials</a>
+              {/* Demo Button */}
+              <a
+                href="https://sos-2-eb03.onrender.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-bold transition shadow-md"
+              >
+                Try Demo
+              </a>
             </nav>
           </div>
 
@@ -126,6 +135,16 @@ export default function Home() {
                 <li><a href="#benefits" className="block hover:text-red-400" onClick={() => setMobileMenuOpen(false)}>Benefits</a></li>
                 <li><a href="#verification" className="block hover:text-red-400" onClick={() => setMobileMenuOpen(false)}>Verification</a></li>
                 <li><a href="#testimonials" className="block hover:text-red-400" onClick={() => setMobileMenuOpen(false)}>Testimonials</a></li>
+                <li>
+                  <a
+                    href="https://sos-2-eb03.onrender.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-bold text-center"
+                  >
+                    Try Demo
+                  </a>
+                </li>
               </ul>
             </nav>
           )}
@@ -177,6 +196,7 @@ export default function Home() {
                 className="mt-8 text-sm text-gray-300 hover:text-white flex items-center mx-auto"
               >
                 <span>Change selection</span>
+
               </button>
             )}
           </div>
@@ -560,234 +580,234 @@ export default function Home() {
 
                 {!submitted ? (
                   <div className="bg-white p-6 rounded-lg shadow-xl text-left text-black">
-                  <form onSubmit={handleSubmit}>
-                    <div className="grid md:grid-cols-2 gap-4 mb-4">
-                      <div>
-                        <label className="block text-gray-700 font-bold mb-2">Full Name *</label>
-                        <input 
-                          type="text" 
-                          value={professionalName}
-                          onChange={(e) => setProfessionalName(e.target.value)}
-                          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" 
-                          required 
-                        />
+                    <form onSubmit={handleSubmit}>
+                      <div className="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label className="block text-gray-700 font-bold mb-2">Full Name *</label>
+                          <input
+                            type="text"
+                            value={professionalName}
+                            onChange={(e) => setProfessionalName(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-gray-700 font-bold mb-2">Email *</label>
+                          <input
+                            type="email"
+                            value={professionalEmail}
+                            onChange={(e) => setProfessionalEmail(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                            required
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-gray-700 font-bold mb-2">Email *</label>
-                        <input
-                          type="email"
-                          value={professionalEmail}
-                          onChange={(e) => setProfessionalEmail(e.target.value)}
+
+                      <div className="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label className="block text-gray-700 font-bold mb-2">Phone *</label>
+                          <input
+                            type="tel"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-gray-700 font-bold mb-2">City *</label>
+                          <input
+                            type="text"
+                            value={city}
+                            onChange={(e) => setCity(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                          <label className="block text-gray-700 font-bold mb-2">Primary Skill *</label>
+                          <select
+                            value={skill}
+                            onChange={(e) => setSkill(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                            required
+                          >
+                            <option value="">Select your primary skill</option>
+                            <option value="bartender">Bartender</option>
+                            <option value="server">Server</option>
+                            <option value="security">Security</option>
+                            <option value="coordinator">Event Coordinator</option>
+                            <option value="technical">Technical Support</option>
+                            <option value="vendor">Vendor/Equipment Provider</option>
+                            <option value="other">Other</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-gray-700 font-bold mb-2">Years of Experience *</label>
+                          <select
+                            value={experience}
+                            onChange={(e) => setExperience(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                            required
+                          >
+                            <option value="">Select years</option>
+                            <option value="0-1">0-1 years</option>
+                            <option value="1-3">1-3 years</option>
+                            <option value="3-5">3-5 years</option>
+                            <option value="5+">5+ years</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="mb-6">
+                        <label className="block text-gray-700 font-bold mb-2">Tell us about your experience (Optional)</label>
+                        <textarea
+                          rows={3}
+                          value={aboutExperience}
+                          onChange={(e) => setAboutExperience(e.target.value)}
                           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                          required
-                        />
+                          placeholder="Share your relevant skills and experience..."
+                        ></textarea>
                       </div>
-                    </div>
 
-                    <div className="grid md:grid-cols-2 gap-4 mb-4">
-                      <div>
-                        <label className="block text-gray-700 font-bold mb-2">Phone *</label>
-                        <input 
-                          type="tel" 
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" 
-                          required 
-                        />
+                      <div className="mb-6">
+                        <div className="flex items-start">
+                          <input
+                            type="checkbox"
+                            id="background-check"
+                            checked={agreeToCheck}
+                            onChange={(e) => setAgreeToCheck(e.target.checked)}
+                            className="mt-1 mr-2"
+                            required
+                          />
+                          <label htmlFor="background-check" className="text-gray-700">
+                            I understand SOS requires background checks and skills verification for all professionals *
+                          </label>
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-gray-700 font-bold mb-2">City *</label>
-                        <input 
-                          type="text" 
-                          value={city}
-                          onChange={(e) => setCity(e.target.value)}
-                          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" 
-                          required 
-                        />
-                      </div>
-                    </div>
 
-                    <div className="grid md:grid-cols-2 gap-4 mb-6">
-                      <div>
-                        <label className="block text-gray-700 font-bold mb-2">Primary Skill *</label>
-                        <select 
-                          value={skill}
-                          onChange={(e) => setSkill(e.target.value)}
-                          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" 
-                          required
-                        >
-                          <option value="">Select your primary skill</option>
-                          <option value="bartender">Bartender</option>
-                          <option value="server">Server</option>
-                          <option value="security">Security</option>
-                          <option value="coordinator">Event Coordinator</option>
-                          <option value="technical">Technical Support</option>
-                          <option value="vendor">Vendor/Equipment Provider</option>
-                          <option value="other">Other</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-bold mb-2">Years of Experience *</label>
-                        <select 
-                          value={experience}
-                          onChange={(e) => setExperience(e.target.value)}
-                          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" 
-                          required
-                        >
-                          <option value="">Select years</option>
-                          <option value="0-1">0-1 years</option>
-                          <option value="1-3">1-3 years</option>
-                          <option value="3-5">3-5 years</option>
-                          <option value="5+">5+ years</option>
-                        </select>
-                      </div>
-                    </div>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className={`w-full ${isSubmitting ? 'bg-gray-500' : 'bg-red-600 hover:bg-red-700'} text-white font-bold py-3 px-6 rounded-lg transition shadow-lg`}
+                      >
+                        {isSubmitting ? 'Submitting...' : 'Apply to Join'}
+                      </button>
 
-                    <div className="mb-6">
-                      <label className="block text-gray-700 font-bold mb-2">Tell us about your experience (Optional)</label>
-                      <textarea 
-                        rows={3}
-                        value={aboutExperience}
-                        onChange={(e) => setAboutExperience(e.target.value)}
-                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" 
-                        placeholder="Share your relevant skills and experience..."
-                      ></textarea>
-                    </div>
-
-                    <div className="mb-6">
-                      <div className="flex items-start">
-                        <input 
-                          type="checkbox" 
-                          id="background-check" 
-                          checked={agreeToCheck}
-                          onChange={(e) => setAgreeToCheck(e.target.checked)}
-                          className="mt-1 mr-2" 
-                          required 
-                        />
-                        <label htmlFor="background-check" className="text-gray-700">
-                          I understand SOS requires background checks and skills verification for all professionals *
-                        </label>
-                      </div>
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className={`w-full ${isSubmitting ? 'bg-gray-500' : 'bg-red-600 hover:bg-red-700'} text-white font-bold py-3 px-6 rounded-lg transition shadow-lg`}
-                    >
-                      {isSubmitting ? 'Submitting...' : 'Apply to Join'}
-                    </button>
-                    
-                    {submitError && (
-                      <p className="mt-3 text-red-600 text-center">{submitError}</p>
-                    )}
-                  </form>
-                </div>
-              ) : (
-                <div className="bg-white p-6 rounded-lg shadow-xl text-center">
-                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Check className="text-red-600" size={32} />
+                      {submitError && (
+                        <p className="mt-3 text-red-600 text-center">{submitError}</p>
+                      )}
+                    </form>
                   </div>
-                  <h3 className="text-gray-800 text-xl font-bold mb-2">Application Received!</h3>
-                  <p className="text-gray-600 mb-4">
-                    Thanks for your interest in joining the SOS professional network. We&apos;ll review your application and be in touch soon.
-                  </p>
-                  <button
-                    onClick={() => setSubmitted(false)}
-                    className="text-red-600 hover:text-red-800 font-medium"
-                  >
-                    Submit another application
-                  </button>
+                ) : (
+                  <div className="bg-white p-6 rounded-lg shadow-xl text-center">
+                    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Check className="text-red-600" size={32} />
+                    </div>
+                    <h3 className="text-gray-800 text-xl font-bold mb-2">Application Received!</h3>
+                    <p className="text-gray-600 mb-4">
+                      Thanks for your interest in joining the SOS professional network. We&apos;ll review your application and be in touch soon.
+                    </p>
+                    <button
+                      onClick={() => setSubmitted(false)}
+                      className="text-red-600 hover:text-red-800 font-medium"
+                    >
+                      Submit another application
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* Testimonials - Visible to all */}
+      <section id="testimonials" className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12 text-black">Success Stories</h2>
+
+          <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
+            <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-red-700 font-bold">JM</span>
                 </div>
-              )}
+                <div>
+                  <h4 className="font-bold">Jordan M.</h4>
+                  <p className="text-sm text-gray-600">Festival Coordinator</p>
+                </div>
+              </div>
+              <p className="text-gray-700">&quot;When 30 security staff canceled the day before our festival, SOS saved us. Within hours, we had qualified replacements ready to work.&quot;</p>
             </div>
-          </div>
-        </section>
-      </>
-    )}
 
-    {/* Testimonials - Visible to all */}
-    <section id="testimonials" className="py-16 bg-white">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12 text-black">Success Stories</h2>
-
-        <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
-          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
-                <span className="text-red-700 font-bold">JM</span>
+            <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-red-700 font-bold">SL</span>
+                </div>
+                <div>
+                  <h4 className="font-bold">Sarah L.</h4>
+                  <p className="text-sm text-gray-600">Wedding Planner</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-bold">Jordan M.</h4>
-                <p className="text-sm text-gray-600">Festival Coordinator</p>
-              </div>
+              <p className="text-gray-700">&quot;I used to spend days finding reliable bartenders and servers. Now with SOS, I can book vetted staff in minutes. A game-changer!&quot;</p>
             </div>
-            <p className="text-gray-700">&quot;When 30 security staff canceled the day before our festival, SOS saved us. Within hours, we had qualified replacements ready to work.&quot;</p>
-          </div>
 
-          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
-                <span className="text-red-700 font-bold">SL</span>
+            <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-red-700 font-bold">KT</span>
+                </div>
+                <div>
+                  <h4 className="font-bold">Kevin T.</h4>
+                  <p className="text-sm text-gray-600">Bartender</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-bold">Sarah L.</h4>
-                <p className="text-sm text-gray-600">Wedding Planner</p>
-              </div>
+              <p className="text-gray-700">&quot;SOS has connected me with quality gigs that fit my schedule. The verification process was thorough but worth it for the premium opportunities.&quot;</p>
             </div>
-            <p className="text-gray-700">&quot;I used to spend days finding reliable bartenders and servers. Now with SOS, I can book vetted staff in minutes. A game-changer!&quot;</p>
-          </div>
-
-          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
-                <span className="text-red-700 font-bold">KT</span>
-              </div>
-              <div>
-                <h4 className="font-bold">Kevin T.</h4> 
-                <p className="text-sm text-gray-600">Bartender</p>
-              </div>
-            </div>
-            <p className="text-gray-700">&quot;SOS has connected me with quality gigs that fit my schedule. The verification process was thorough but worth it for the premium opportunities.&quot;</p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    {/* Footer */}
-    <footer className="bg-black text-white py-8">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-6 md:mb-0">
-            <h2 className="text-2xl font-bold flex items-center">
-              SOS <span className="ml-2 text-sm">Staff On Shift</span>
-            </h2>
-            <p className="mt-2 text-gray-400">Event staffing emergencies solved.</p>
-          </div>
-
-          {userPath === null && (
-            <div className="flex space-x-6">
-              <button
-                onClick={() => setUserPath('organizer')}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-sm font-bold"
-              >
-                For Event Organizers
-              </button>
-              <button
-                onClick={() => setUserPath('professional')}
-                className="px-4 py-2 bg-white text-black hover:bg-gray-100 rounded text-sm font-bold"
-              >
-                For Shifters
-              </button>
+      {/* Footer */}
+      <footer className="bg-black text-white py-8">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-6 md:mb-0">
+              <h2 className="text-2xl font-bold flex items-center">
+                SOS <span className="ml-2 text-sm">Staff On Shift</span>
+              </h2>
+              <p className="mt-2 text-gray-400">Event staffing emergencies solved.</p>
             </div>
-          )}
 
-          <div className="text-sm text-gray-400 text-center mt-6 md:mt-0">
-            &copy; {new Date().getFullYear()} Staff On Shift. All rights reserved.
+            {userPath === null && (
+              <div className="flex space-x-6">
+                <button
+                  onClick={() => setUserPath('organizer')}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-sm font-bold"
+                >
+                  For Event Organizers
+                </button>
+                <button
+                  onClick={() => setUserPath('professional')}
+                  className="px-4 py-2 bg-white text-black hover:bg-gray-100 rounded text-sm font-bold"
+                >
+                  For Shifters
+                </button>
+              </div>
+            )}
+
+            <div className="text-sm text-gray-400 text-center mt-6 md:mt-0">
+              &copy; {new Date().getFullYear()} Staff On Shift. All rights reserved.
+            </div>
           </div>
         </div>
-      </div>
-    </footer>
-  </div>
-);
+      </footer>
+    </div>
+  );
 }
