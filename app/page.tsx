@@ -137,11 +137,11 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-              Event Staffing Emergencies? <br />
+              Event Staffing Emergencies? Need Staff for your Event? <br />
               <span className="text-red-500">SOS to the Rescue!</span>
             </h2>
             <p className="text-xl mb-12 max-w-2xl mx-auto">
-              On-demand staff and vendors for your events - when you need them most.
+              On-demand staff for your events - when you need them most.
               No more juggling spreadsheets or making desperate calls.
             </p>
 
@@ -196,21 +196,21 @@ export default function Home() {
                     <li className="flex items-start">
                       <div className="mt-1 mr-4 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">1</div>
                       <div>
-                        <h3 className="font-bold text-lg mb-1">&quot;Half my staff just canceled for tomorrow&apos;s event!&quot;</h3>
+                        <h3 className="font-bold text-lg mb-1 text-gray-700">&quot;Half my staff just canceled for tomorrow&apos;s event!&quot;</h3>
                         <p className="text-gray-700">With SOS, you can find vetted, qualified replacements within hours.</p>
                       </div>
                     </li>
                     <li className="flex items-start">
                       <div className="mt-1 mr-4 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">2</div>
                       <div>
-                        <h3 className="font-bold text-lg mb-1">&quot;I need 300 people for the Winnipeg Folk Festival in three days.&quot;</h3>
+                        <h3 className="font-bold text-lg mb-1 text-gray-700">&quot;I need 300 people for the Winnipeg Folk Festival in three days.&quot;</h3>
                         <p className="text-gray-700">SOS can scale to help you staff large events on short notice.</p>
                       </div>
                     </li>
                     <li className="flex items-start">
                       <div className="mt-1 mr-4 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">3</div>
                       <div>
-                        <h3 className="font-bold text-lg mb-1">&quot;I&apos;m scrambling to find bartenders, servers, and security for a wedding.&quot;</h3>
+                        <h3 className="font-bold text-lg mb-1 text-gray-700">&quot;I&apos;m scrambling to find bartenders, servers, and security for a wedding.&quot;</h3>
                         <p className="text-gray-700">From bartenders to security - find all your staffing needs in one place.</p>
                       </div>
                     </li>
@@ -712,7 +712,7 @@ export default function Home() {
         <h2 className="text-3xl font-bold text-center mb-12 text-black">Success Stories</h2>
 
         <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
-          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+          <div className="bg-gray-500 p-6 rounded-lg shadow-md">
             <div className="flex items-center mb-4">
               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
                 <span className="text-red-700 font-bold">JM</span>
@@ -725,7 +725,7 @@ export default function Home() {
             <p className="text-gray-700">&quot;When 30 security staff canceled the day before our festival, SOS saved us. Within hours, we had qualified replacements ready to work.&quot;</p>
           </div>
 
-          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+          <div className="bg-gray-500 p-6 rounded-lg shadow-md">
             <div className="flex items-center mb-4">
               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
                 <span className="text-red-700 font-bold">SL</span>
@@ -738,7 +738,7 @@ export default function Home() {
             <p className="text-gray-700">&quot;I used to spend days finding reliable bartenders and servers. Now with SOS, I can book vetted staff in minutes. A game-changer!&quot;</p>
           </div>
 
-          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+          <div className="bg-gray-500 p-6 rounded-lg shadow-md">
             <div className="flex items-center mb-4">
               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
                 <span className="text-red-700 font-bold">KT</span>
@@ -777,13 +777,13 @@ export default function Home() {
                 onClick={() => setUserPath('professional')}
                 className="px-4 py-2 bg-white text-black hover:bg-gray-100 rounded text-sm font-bold"
               >
-                For Event Professionals
+                For Shifters
               </button>
             </div>
           )}
 
           <div className="text-sm text-gray-400 text-center mt-6 md:mt-0">
-            &copy; {new Date().getFullYear()} SOS Staff On Shift. All rights reserved.
+            &copy; {new Date().getFullYear()} Staff On Shift. All rights reserved.
           </div>
         </div>
       </div>
