@@ -712,7 +712,7 @@ export default function Home() {
         <h2 className="text-3xl font-bold text-center mb-12 text-black">Success Stories</h2>
 
         <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
-          <div className="bg-gray-500 p-6 rounded-lg shadow-md">
+          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
             <div className="flex items-center mb-4">
               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
                 <span className="text-red-700 font-bold">JM</span>
@@ -725,7 +725,7 @@ export default function Home() {
             <p className="text-gray-700">&quot;When 30 security staff canceled the day before our festival, SOS saved us. Within hours, we had qualified replacements ready to work.&quot;</p>
           </div>
 
-          <div className="bg-gray-500 p-6 rounded-lg shadow-md">
+          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
             <div className="flex items-center mb-4">
               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
                 <span className="text-red-700 font-bold">SL</span>
@@ -738,7 +738,7 @@ export default function Home() {
             <p className="text-gray-700">&quot;I used to spend days finding reliable bartenders and servers. Now with SOS, I can book vetted staff in minutes. A game-changer!&quot;</p>
           </div>
 
-          <div className="bg-gray-500 p-6 rounded-lg shadow-md">
+          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
             <div className="flex items-center mb-4">
               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
                 <span className="text-red-700 font-bold">KT</span>
