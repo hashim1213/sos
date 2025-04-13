@@ -753,6 +753,317 @@ export const mockProfessionals: Professional[] = [
         }
       ],
       reviews: []
-    }
+    },
+      {
+        "id": "prof-11",
+        "name": "Jonathan",
+        "avatar": "/images/avatars/jonathan.png",
+        "jobTitle": "Security Guard",
+        "bio": "Dedicated security professional with strong skills in crowd management and emergency response, experienced in protecting venues in Winnipeg.",
+        "about": "With over 7 years of experience in event security, I am committed to ensuring safety and order at various venues across Winnipeg. I excel in crisis management, risk assessment, and enforcing safety protocols while maintaining a friendly demeanor with guests.",
+        "rating": 4.8,
+        "reviewCount": 42,
+        "hourlyRate": 28,
+        "yearsExperience": 7,
+        "skills": [
+          "Crowd Management",
+          "Crisis Intervention",
+          "Risk Assessment",
+          "Emergency Response",
+          "Access Control"
+        ],
+        "location": "Winnipeg, MB",
+        "contact": {
+          "email": "jonathan.security@example.com",
+          "phone": "(204) 555-0111"
+        },
+        "availability": {
+          "nextAvailable": "Available tomorrow",
+          "preferredHours": "Nights and weekends",
+          "noticeRequired": "24 hours notice",
+          "schedule": [
+            { "day": "Monday", "hours": "8AM – 4PM" },
+            { "day": "Tuesday", "hours": "8AM – 4PM" },
+            { "day": "Wednesday", "hours": "" },
+            { "day": "Thursday", "hours": "12PM – 8PM" },
+            { "day": "Friday", "hours": "6PM – 12AM" },
+            { "day": "Saturday", "hours": "6PM – 12AM" },
+            { "day": "Sunday", "hours": "10AM – 4PM" }
+          ]
+        },
+        "experience": [
+          {
+            "position": "Security Supervisor",
+            "company": "SafeGuard Winnipeg",
+            "period": "2018 – Present",
+            "description": "Led a team in managing security operations for large-scale events, ensuring guest safety and compliance with regulations."
+          },
+          {
+            "position": "Security Officer",
+            "company": "Guardian Services",
+            "period": "2015 – 2018",
+            "description": "Handled entry screening, monitored surveillance systems, and provided immediate response to incidents."
+          }
+        ],
+        "certifications": [
+          {
+            "name": "Manitoba Security Guard License",
+            "issuer": "Justice Manitoba",
+            "year": "2015"
+          },
+          {
+            "name": "CPR and First Aid Certification",
+            "issuer": "Red Cross Manitoba",
+            "year": "2020"
+          }
+        ],
+        "reviews": []
+      },
+      {
+        "id": "prof-12",
+        "name": "Andrii",
+        "avatar": "/images/avatars/andrii.png",
+        "jobTitle": "Bartender",
+        "bio": "Energetic bartender with extensive experience in crafting cocktails and delivering excellent service in busy Winnipeg venues.",
+        "about": "With over 5 years in the hospitality industry, I specialize in creating memorable experiences with a mix of classic and innovative drinks. Known for my friendly service and attention to detail, I thrive in fast-paced settings.",
+        "rating": 4.6,
+        "reviewCount": 38,
+        "hourlyRate": 24,
+        "yearsExperience": 5,
+        "skills": [
+          "Mixology",
+          "Customer Service",
+          "Speed and Efficiency",
+          "Inventory Management",
+          "Creative Drink Design"
+        ],
+        "location": "Winnipeg, MB",
+        "contact": {
+          "email": "andrii.bartender@example.com",
+          "phone": "(204) 555-0222"
+        },
+        "availability": {
+          "nextAvailable": "Available this weekend",
+          "preferredHours": "Evenings",
+          "noticeRequired": "12 hours notice",
+          "schedule": [
+            { "day": "Monday", "hours": "" },
+            { "day": "Tuesday", "hours": "4PM – 10PM" },
+            { "day": "Wednesday", "hours": "4PM – 10PM" },
+            { "day": "Thursday", "hours": "5PM – 11PM" },
+            { "day": "Friday", "hours": "6PM – 2AM" },
+            { "day": "Saturday", "hours": "6PM – 2AM" },
+            { "day": "Sunday", "hours": "12PM – 6PM" }
+          ]
+        },
+        "experience": [
+          {
+            "position": "Head Bartender",
+            "company": "Mix & Mingle",
+            "period": "2019 – Present",
+            "description": "Managed bar operations and trained junior staff in cocktail preparation and customer interaction."
+          },
+          {
+            "position": "Bartender",
+            "company": "City Lounge",
+            "period": "2017 – 2019",
+            "description": "Provided prompt and friendly service while mixing a variety of cocktails and beverages."
+          }
+        ],
+        "certifications": [
+          {
+            "name": "Responsible Service of Alcohol",
+            "issuer": "Manitoba Liquor & Gaming Authority",
+            "year": "2017"
+          }
+        ],
+        "reviews": []
+      },
+      {
+        "id": "prof-13",
+        "name": "Hashim",
+        "avatar": "/images/avatars/hashim.png",
+        "jobTitle": "Server",
+        "bio": "Professional server with a reputation for efficiency and a personable approach, ensuring a memorable dining experience in Winnipeg.",
+        "about": "With over 6 years of experience in food service, I provide prompt and attentive service that keeps guests returning. I take pride in creating a warm dining atmosphere and managing large tables seamlessly.",
+        "rating": 4.7,
+        "reviewCount": 45,
+        "hourlyRate": 22,
+        "yearsExperience": 6,
+        "skills": [
+          "Table Service",
+          "Customer Engagement",
+          "Multitasking",
+          "Conflict Resolution",
+          "POS Systems"
+        ],
+        "location": "Winnipeg, MB",
+        "contact": {
+          "email": "hashim.server@example.com",
+          "phone": "(204) 555-0333"
+        },
+        "availability": {
+          "nextAvailable": "Available tomorrow",
+          "preferredHours": "Afternoons and evenings",
+          "noticeRequired": "24 hours notice",
+          "schedule": [
+            { "day": "Monday", "hours": "11AM – 7PM" },
+            { "day": "Tuesday", "hours": "11AM – 7PM" },
+            { "day": "Wednesday", "hours": "11AM – 7PM" },
+            { "day": "Thursday", "hours": "5PM – 11PM" },
+            { "day": "Friday", "hours": "5PM – 11PM" },
+            { "day": "Saturday", "hours": "10AM – 4PM" },
+            { "day": "Sunday", "hours": "10AM – 4PM" }
+          ]
+        },
+        "experience": [
+          {
+            "position": "Senior Server",
+            "company": "Dining Delights",
+            "period": "2018 – Present",
+            "description": "Managed high-volume service operations in a busy restaurant setting, mentoring new staff and ensuring customer satisfaction."
+          },
+          {
+            "position": "Server",
+            "company": "Taste of Winnipeg",
+            "period": "2015 – 2018",
+            "description": "Provided detailed menu knowledge and personalized service while managing large groups and special requests."
+          }
+        ],
+        "certifications": [
+          {
+            "name": "Food Handler Certification",
+            "issuer": "Winnipeg Public Health",
+            "year": "2016"
+          },
+          {
+            "name": "Alcohol Server Certification",
+            "issuer": "Manitoba Liquor & Gaming Authority",
+            "year": "2017"
+          }
+        ],
+        "reviews": []
+      },
+      {
+        "id": "prof-14",
+        "name": "Rio",
+        "avatar": "/images/avatars/rio.png",
+        "jobTitle": "Technician",
+        "bio": "Skilled technician specializing in audiovisual systems and lighting, supporting Winnipeg's diverse event scene with technical expertise.",
+        "about": "With over 8 years of experience in technical event support, I ensure that lighting, sound, and stage systems operate seamlessly. I am adept at troubleshooting and collaborating with event organizers to create flawless productions.",
+        "rating": 4.9,
+        "reviewCount": 30,
+        "hourlyRate": 32,
+        "yearsExperience": 8,
+        "skills": [
+          "AV Systems",
+          "Lighting Design",
+          "Sound Engineering",
+          "Technical Troubleshooting",
+          "Stage Setup"
+        ],
+        "location": "Winnipeg, MB",
+        "contact": {
+          "email": "rio.technician@example.com",
+          "phone": "(204) 555-0444"
+        },
+        "availability": {
+          "nextAvailable": "Available this weekend",
+          "preferredHours": "Evenings & Weekends",
+          "noticeRequired": "24 hours notice",
+          "schedule": [
+            { "day": "Monday", "hours": "" },
+            { "day": "Tuesday", "hours": "3PM – 9PM" },
+            { "day": "Wednesday", "hours": "3PM – 9PM" },
+            { "day": "Thursday", "hours": "4PM – 10PM" },
+            { "day": "Friday", "hours": "6PM – 12AM" },
+            { "day": "Saturday", "hours": "6PM – 12AM" },
+            { "day": "Sunday", "hours": "12PM – 6PM" }
+          ]
+        },
+        "experience": [
+          {
+            "position": "Senior Technician",
+            "company": "Event Tech Solutions",
+            "period": "2017 – Present",
+            "description": "Managed technical equipment for concerts and corporate events, ensuring seamless integration of AV systems."
+          },
+          {
+            "position": "AV Technician",
+            "company": "Winnipeg Sound & Light",
+            "period": "2013 – 2017",
+            "description": "Set up and maintained audiovisual equipment for live performances and events."
+          }
+        ],
+        "certifications": [
+          {
+            "name": "Certified AV Technician",
+            "issuer": "AV Institute Canada",
+            "year": "2015"
+          }
+        ],
+        "reviews": []
+      },
+      {
+        "id": "prof-15",
+        "name": "Pavan",
+        "avatar": "/images/avatars/pavan.png",
+        "jobTitle": "Event Coordinator",
+        "bio": "Experienced event coordinator dedicated to planning and executing successful events across Winnipeg with a keen eye for detail and creative flair.",
+        "about": "With over 6 years of expertise in event planning, I excel in managing vendor relationships, coordinating logistics, and orchestrating memorable experiences. My proactive approach and creative problem solving ensure every event runs smoothly.",
+        "rating": 4.7,
+        "reviewCount": 50,
+        "hourlyRate": 30,
+        "yearsExperience": 6,
+        "skills": [
+          "Event Planning",
+          "Vendor Coordination",
+          "Budget Management",
+          "Timeline Coordination",
+          "Creative Problem Solving"
+        ],
+        "location": "Winnipeg, MB",
+        "contact": {
+          "email": "pavan.eventco@example.com",
+          "phone": "(204) 555-0555"
+        },
+        "availability": {
+          "nextAvailable": "Available in 2 days",
+          "preferredHours": "Flexible",
+          "noticeRequired": "12 hours notice",
+          "schedule": [
+            { "day": "Monday", "hours": "9AM – 5PM" },
+            { "day": "Tuesday", "hours": "9AM – 5PM" },
+            { "day": "Wednesday", "hours": "9AM – 5PM" },
+            { "day": "Thursday", "hours": "9AM – 5PM" },
+            { "day": "Friday", "hours": "9AM – 5PM" },
+            { "day": "Saturday", "hours": "10AM – 4PM" },
+            { "day": "Sunday", "hours": "" }
+          ]
+        },
+        "experience": [
+          {
+            "position": "Event Coordinator",
+            "company": "Dream Events Winnipeg",
+            "period": "2018 – Present",
+            "description": "Coordinated and managed a wide range of events, overseeing logistics, vendor negotiations, and on-site execution to ensure seamless experiences."
+          },
+          {
+            "position": "Assistant Event Planner",
+            "company": "Moment Makers",
+            "period": "2015 – 2018",
+            "description": "Supported event planning from concept to execution, assisting with vendor management and client communications."
+          }
+        ],
+        "certifications": [
+          {
+            "name": "Certified Event Planner",
+            "issuer": "Event Planning Institute",
+            "year": "2018"
+          }
+        ],
+        "reviews": []
+      },
+    
     
 ]
