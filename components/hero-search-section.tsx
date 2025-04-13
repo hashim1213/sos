@@ -3,27 +3,37 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Search, Users, Calendar } from "lucide-react"
+import { SearchAnimationModal } from "@/components/search-animation-modal"
 
 export function HeroSearchSection() {
-  const router = useRouter()
   const [activeTab, setActiveTab] = useState("professionals")
   const [professionalQuery, setProfessionalQuery] = useState("")
   const [organizerQuery, setOrganizerQuery] = useState("")
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(true)
+  const [searchType, setSearchType] = useState<"professionals" | "organizers">("professionals")
+  const [searchQuery, setSearchQuery] = useState("")
 
   const handleProfessionalSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    router.push(`/professionals?q=${encodeURIComponent(professionalQuery)}`)
+    //if (!professionalQuery.trim()) return
+
+    setSearchType("professionals")
+    setSearchQuery(professionalQuery)
+    setIsSearchModalOpen(true)
   }
 
   const handleOrganizerSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    router.push(`/organizers?q=${encodeURIComponent(organizerQuery)}`)
+    //if (!organizerQuery.trim()) return
+
+    setSearchType("organizers")
+    setSearchQuery(organizerQuery)
+    setIsSearchModalOpen(true)
   }
 
   return (
@@ -73,7 +83,6 @@ export function HeroSearchSection() {
                     <div className="flex flex-col gap-4 md:flex-row">
                       <div className="flex-1">
                         <Input
-                          style={{color: "black"}}
                           placeholder="Search for bartenders, servers, security staff..."
                           value={professionalQuery}
                           onChange={(e) => setProfessionalQuery(e.target.value)}
@@ -124,7 +133,6 @@ export function HeroSearchSection() {
                     <div className="flex flex-col gap-4 md:flex-row">
                       <div className="flex-1">
                         <Input
-                          style={{color: "black"}}
                           placeholder="Search for wedding planners, corporate event managers..."
                           value={organizerQuery}
                           onChange={(e) => setOrganizerQuery(e.target.value)}
@@ -174,6 +182,14 @@ export function HeroSearchSection() {
           </div>
         </div>
       </div>
+
+      {/* Search Animation Modal */}
+      <SearchAnimationModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+        searchType={searchType}
+        searchQuery={searchQuery}
+      />
     </section>
   )
 }
