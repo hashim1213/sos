@@ -19,19 +19,11 @@ export function Footer() {
               Connecting event organizers with qualified staff for seamless event experiences.
             </p>
             <div className="flex gap-4">
-              <Link href="#" className="hover:text-primary">
-                <Facebook className="h-5 w-5" />
-                <span className="sr-only">Facebook</span>
-              </Link>
-              <Link href="#" className="hover:text-primary">
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
-              </Link>
-              <Link href="#" className="hover:text-primary">
+              <Link href="https://www.instagram.com/staff_on_shift/" className="hover:text-primary" target="_blank">
                 <Instagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
               </Link>
-              <Link href="#" className="hover:text-primary">
+              <Link href="https://www.linkedin.com/in/staff-on-shift-sos-a57378360" className="hover:text-primary"  target="_blank">
                 <Linkedin className="h-5 w-5" />
                 <span className="sr-only">LinkedIn</span>
               </Link>

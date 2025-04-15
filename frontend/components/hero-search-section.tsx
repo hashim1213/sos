@@ -59,6 +59,7 @@ export function HeroSearchSection() {
                 <Link href="/register-professional">Apply as Staff</Link>
               </Button>
             </div>
+
           </div>
 
           {/* Search Column */}
