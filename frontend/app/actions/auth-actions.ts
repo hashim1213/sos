@@ -39,12 +39,14 @@ export async function login(formData: FormData) {
     })
 
     // Redirect to callback URL or dashboard
-    redirect(callbackUrl)
   } catch (error) {
     console.error("Login error:", error)
     return {
-      error: error instanceof Error ? error.message : "Failed to login. Please check your credentials.",
+        error: error instanceof Error ? error.message : "Failed to login. Please check your credentials.",
     }
+  }
+  finally{
+    redirect(callbackUrl)
   }
 }
 

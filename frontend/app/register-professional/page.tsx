@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { CheckCircle2, Upload } from "lucide-react"
+import { registerProfessional } from "@/app/actions/professional-actions"
 
 export default function RegisterProfessionalPage() {
   const router = useRouter()
@@ -28,8 +29,13 @@ export default function RegisterProfessionalPage() {
     lastName: "",
     email: "",
     phone: "",
-    location: "",
+    address: "",
+    city: "",
+    province: "",
+    postalcode: "",
+
     profileImage: "",
+    password: "", // Add this line
 
     // Professional Details
     jobTitle: "",
@@ -177,20 +183,94 @@ export default function RegisterProfessionalPage() {
     window.scrollTo(0, 0)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+  const [submitError, setSubmitError] = useState("")
+  const [submitted, setSubmitted] = useState(false)
 
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError("");
+  
+    // Log initial state for debugging
+    console.log("Initial form state:", JSON.stringify(formData));
+  
     try {
-      // In a real application, you would send the data to your API here
-      await new Promise((resolve) => setTimeout(resolve, 1500)) // Simulate API call
-
-      setIsComplete(true)
-      window.scrollTo(0, 0)
+      // Create a new FormData instance
+      const fd = new FormData();
+  
+      // Convert formData state to FormData instance
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === "availability" && value) {
+          // Append each day from availability as separate entries
+          Object.entries(value as Record<string, boolean>).forEach(([day, isAvailable]) => {
+            fd.append(day, isAvailable.toString());
+          });
+        } else if (key === "skills" && Array.isArray(value)) {
+          // Append each skill separately
+          value.forEach((skill : any) => fd.append("skills", skill));
+        } else if (key === "certifications" && Array.isArray(value)) {
+          // Append each certification as a JSON string
+          value.forEach((cert) => fd.append("certifications", JSON.stringify(cert)));
+        } else if (key === "experiences" && Array.isArray(value)) {
+          // Append each experience as a JSON string
+          value.forEach((exp) => fd.append("experiences", JSON.stringify(exp)));
+        } else {
+          // For simple keys (string, boolean, etc.)
+          fd.append(key, value as string | Blob);
+        }
+      });
+  
+      // Optional: Debug the FormData entries
+      const entries = Array.from(fd.entries());
+      console.log("FormData entries:", entries);
+  
+      // Submit the FormData object
+      const result = await registerProfessional(fd);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+  
+      // On success, mark as submitted and reset the state
+      setSubmitted(true);
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        address: "",
+        city: "",
+        province: "",
+        postalcode: "",
+        profileImage: "",
+        password: "",
+        jobTitle: "",
+        hourlyRate: "",
+        yearsExperience: "",
+        bio: "",
+        about: "",
+        skills: [] as string[],
+        availability: {
+          monday: false,
+          tuesday: false,
+          wednesday: false,
+          thursday: false,
+          friday: false,
+          saturday: false,
+          sunday: false,
+        },
+        preferredHours: "",
+        noticeRequired: "",
+        certifications: [] as { name: string; issuer: string; year: string }[],
+        experiences: [] as { position: string; company: string; period: string; description: string }[],
+        agreeToTerms: false,
+        agreeToBackground: false,
+      });
     } catch (error) {
-      console.error("Error submitting form:", error)
+      console.error("Error submitting form:", error);
+      setSubmitError(error instanceof Error ? error.message : "Failed to submit. Please try again.");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
+      setIsComplete(true)
     }
   }
 
@@ -293,6 +373,18 @@ export default function RegisterProfessionalPage() {
                             required
                           />
                         </div>
+                        <div className="space-y-0">
+                          <Label htmlFor="password">Password *</Label>
+                          <Input
+                            id="password"
+                            name="password"
+                            type="password"
+                            value={formData.password || ""}
+                            onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
+                            required
+                            placeholder="Create a secure password"
+                          />
+                        </div>
                         <div>
                           <Label htmlFor="phone">Phone Number *</Label>
                           <Input
@@ -306,16 +398,52 @@ export default function RegisterProfessionalPage() {
                         </div>
                       </div>
 
-                      <div>
-                        <Label htmlFor="location">Location (City, Province) *</Label>
+                      <div className="grid gap-4 md:grid-cols-4">
+                        <div>
+                        <Label htmlFor="Address">Address*</Label>
                         <Input
                           id="location"
                           name="location"
-                          placeholder="Toronto, ON"
-                          value={formData.location}
+                          placeholder="123 street"
+                          value={formData.address}
                           onChange={handleChange}
                           required
                         />
+                        </div>
+                        <div>
+                        <Label htmlFor="city">City*</Label>
+                        <Input
+                          id="city"
+                          name="city"
+                          placeholder="Toronto"
+                          value={formData.city}
+                          onChange={handleChange}
+                          required
+                        />
+                        </div>
+                        <div className="md:px-12">
+                        <Label htmlFor="province">Province *</Label>
+                        <Input
+                          id="province"
+                          name="province"
+                          placeholder="ON"
+                          value={formData.province}
+                          onChange={handleChange}
+                          required
+                        />
+                        </div>
+                        <div className="md:px-8">
+                        <Label htmlFor="province">Postal code *</Label>
+                        <Input
+                          id="province"
+                          name="province"
+                          placeholder="ON"
+                          value={formData.postalcode}
+                          onChange={handleChange}
+                          required
+                        />
+                        </div>
+
                       </div>
 
                       <div>
@@ -753,7 +881,7 @@ export default function RegisterProfessionalPage() {
                               I understand that background checks may be required *
                             </label>
                             <p className="text-xs text-gray-500">
-                              StaffOnShift may require background checks for certain positions to ensure the safety and
+                              StaffOnSite may require background checks for certain positions to ensure the safety and
                               security of events.
                             </p>
                           </div>
@@ -782,7 +910,7 @@ export default function RegisterProfessionalPage() {
               </div>
               <h2 className="text-2xl font-bold">Registration Complete!</h2>
               <p className="mt-4 text-gray-600">
-                Thank you for registering as a professional with StaffOnShift. Your profile has been submitted for
+                Thank you for registering as a professional with StaffOnSite. Your profile has been submitted for
                 review. We'll notify you once your profile is approved and visible to event organizers.
               </p>
               <div className="mt-8 space-y-4">

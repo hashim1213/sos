@@ -15,10 +15,12 @@ interface LoginPageProps {
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   // Check if user is already logged in
+  const resolvedSearchParams = await Promise.resolve(searchParams)
+
   const session = await auth()
 
   if (session) {
-    redirect(searchParams.callbackUrl || "/dashboard")
+    redirect(resolvedSearchParams.callbackUrl || "/dashboard")
   }
 
   return (
@@ -30,7 +32,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             <h1 className="mb-6 text-2xl font-bold text-center">Sign In</h1>
             <div className="rounded-lg border p-6 shadow-sm">
               <Suspense fallback={<div>Loading...</div>}>
-                <LoginForm callbackUrl={searchParams.callbackUrl} />
+                <LoginForm callbackUrl={resolvedSearchParams.callbackUrl} />
               </Suspense>
             </div>
             <p className="mt-4 mb-5 text-center text-sm text-gray-500">

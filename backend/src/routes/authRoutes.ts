@@ -8,10 +8,10 @@ const router = express.Router()
 
 // Validation middleware
 const validateRegistration = [
-  body("email").isEmail().withMessage("Please provide a valid email"),
-  body("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters"),
-  body("firstName").notEmpty().withMessage("First name is required"),
-  body("lastName").notEmpty().withMessage("Last name is required"),
+  //body("email").isEmail().withMessage("Please provide a valid email"),
+  //body("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters"),
+  //body("firstName").notEmpty().withMessage("First name is required"),
+  //body("lastName").notEmpty().withMessage("Last name is required"),
   body("role").isIn([UserRole.STAFF, UserRole.ORGANIZER]).withMessage("Role must be either STAFF or ORGANIZER"),
 ]
 
@@ -23,12 +23,18 @@ const validateLogin = [
 // Register route
 router.post("/register", validateRegistration, async (req: Request, res: Response) => {
   try {
+    console.log('register hit 1')
+    console.log('register hit 1' + req.params.toString()) 
+
     // Check for validation errors
     const errors = validationResult(req)
+    console.log('register hit 2')
+    //console.log('register hit 2' + errors.array()[0].msg)
+
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() })
     }
-
+    console.log('register hit 3')
     const userData = req.body as RegisterUserDto
     const user = await authService.register(userData)
 
