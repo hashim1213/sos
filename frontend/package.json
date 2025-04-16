@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "",
     "lucide-react": "",
     "@radix-ui/react-dialog": "",
     "framer-motion": "",

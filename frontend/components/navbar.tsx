@@ -39,12 +39,11 @@ export function Navbar() {
           <Link href="#how-it-works" className="text-sm font-medium text-white hover:text-primary">
             How It Works
           </Link>
-          <Link href="/staff" className="text-sm font-medium text-white hover:text-primary">
-            Find Staff
-          </Link>
-          <Link href="/jobs" className="text-sm font-medium text-white hover:text-primary">
-            Find Jobs
-          </Link>
+          <div>
+          <Button size="lg" variant="secondary" asChild className="bg-white text-primary hover:bg-gray-100">
+            <Link href="/login"><p><strong>Login</strong></p></Link>
+          </Button>
+          </div>
         </nav>
         <Sheet>
           <SheetTrigger asChild>
@@ -61,12 +60,9 @@ export function Navbar() {
               <Link href="#how-it-works" className="text-lg font-medium hover:text-primary">
                 How It Works
               </Link>
-              <Link href="/staff" className="text-lg font-medium hover:text-primary">
-                Find Staff
-              </Link>
-              <Link href="/jobs" className="text-lg font-medium hover:text-primary">
-                Find Jobs
-              </Link>
+              <Button size="lg" variant="secondary" asChild className="bg-white text-primary hover:bg-gray-100">
+                <Link href="/login"><p><strong>Login</strong></p></Link>
+              </Button>
             </nav>
           </SheetContent>
         </Sheet>

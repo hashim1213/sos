@@ -789,45 +789,6 @@ export default function RegisterProfessionalPage() {
                 <Button onClick={() => router.push("/")} className="w-full bg-primary hover:bg-primary/90 sm:w-auto">
                   Return to Home
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setIsComplete(false)
-                    setStep(1)
-                    setFormData({
-                      firstName: "",
-                      lastName: "",
-                      email: "",
-                      phone: "",
-                      location: "",
-                      profileImage: "",
-                      jobTitle: "",
-                      hourlyRate: "",
-                      yearsExperience: "",
-                      bio: "",
-                      about: "",
-                      skills: [],
-                      availability: {
-                        monday: false,
-                        tuesday: false,
-                        wednesday: false,
-                        thursday: false,
-                        friday: false,
-                        saturday: false,
-                        sunday: false,
-                      },
-                      preferredHours: "",
-                      noticeRequired: "",
-                      certifications: [],
-                      experiences: [],
-                      agreeToTerms: false,
-                      agreeToBackground: false,
-                    })
-                  }}
-                  className="w-full sm:w-auto"
-                >
-                  Register Another Professional
-                </Button>
               </div>
             </div>
           )}
