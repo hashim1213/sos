@@ -24,7 +24,8 @@ export async function login(formData: FormData) {
 
     // Set cookies
     const cookieStore = await cookies()
-    cookieStore.set("accessToken", response.accessToken, {
+
+    cookieStore.set("accessToken", response.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 60 * 60, // 1 hour

@@ -22,6 +22,10 @@ export function LoginForm({ callbackUrl }: LoginFormProps) {
     setIsSubmitting(true)
     setError(null)
 
+    if (callbackUrl === undefined){
+      callbackUrl = "/dashboard"
+    }
+
     try {
       // Add the callback URL to the form data
       if (callbackUrl) {
@@ -37,6 +41,10 @@ export function LoginForm({ callbackUrl }: LoginFormProps) {
     } catch (error) {
       setError(error instanceof Error ? error.message : "An unexpected error occurred")
       setIsSubmitting(false)
+    }
+    finally {
+      router.push(callbackUrl)
+      router.refresh()
     }
   }
 

@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge"
 import { Suspense } from "react"
 import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
-//import { getOrganizerJobs } from "@/app/actions/job-actions"
+import { getOrganizerJobs } from "@/app/actions/job-actions"
 //import { getStaffApplications } from "@/app/actions/application-actions"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,8 +11,8 @@ import { Footer } from "@/components/footer"
 import Link from "next/link"
 
 async function OrganizerDashboard() {
-  //const jobs = await getOrganizerJobs()
-  const jobs : any = []
+  const jobs = await getOrganizerJobs()
+  //const jobs : any = []
 
   return (
     <div className="space-y-6">
@@ -136,6 +136,7 @@ async function StaffDashboard() {
 
 // Make sure the dashboard page is also async
 export default async function DashboardPage() {
+
   const session = await auth()
 
   // Redirect if not logged in

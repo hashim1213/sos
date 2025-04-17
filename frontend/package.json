@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "zustand": "",
     "axios": "",
     "lucide-react": "",
     "@radix-ui/react-dialog": "",
