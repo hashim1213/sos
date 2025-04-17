@@ -32,6 +32,12 @@ model User {
   staff         Staff?
   organizer     Organizer?
   refreshTokens RefreshToken[]
+  applications  Application[] @relation("StaffApplications")
+  jobs          Job[]         @relation("OrganizerJobs")
+  bookings      Booking[]     @relation("OrganizerBookings")
+  staffBookings Booking[]     @relation("StaffBookings")
+  reviewsGiven  Review[]      @relation("ReviewerRelation")
+  reviewsReceived Review[]    @relation("RevieweeRelation")
 }
 
 model Staff {
@@ -43,10 +49,13 @@ model Staff {
   hourlyRate      Float?
   yearsExperience String?
   skills          String[]
-  location        String?
+  address         String?
+  city            String?
+  province        String?
+  postalCode      String?
   avatar          String?
-  rating          Float?    @default(0)
-  reviewCount     Int?      @default(0)
+  rating          Float     @default(0)
+  reviewCount     Int       @default(0)
   
   // Availability
   availableDays   String[]
@@ -66,7 +75,10 @@ model Organizer {
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   companyName     String?
   bio             String?
-  location        String?
+  address         String?
+  city            String?
+  province        String?
+  postalCode      String?
   eventTypes      String[]
   avatar          String?
   
@@ -82,4 +94,69 @@ model RefreshToken {
   expiresAt DateTime
   createdAt DateTime @default(now())
   isRevoked Boolean  @default(false)
+}
+
+model Job {
+  id          Int      @id @default(autoincrement())
+  organizerId String
+  organizer   User     @relation("OrganizerJobs", fields: [organizerId], references: [id])
+  title       String
+  description String?
+  jobType     String
+  location    String
+  date        DateTime
+  startTime   String
+  duration    Int
+  hourlyRate  Float
+  status      String   @default("open") // open, filled, cancelled, completed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  applications Application[]
+  bookings     Booking[]
+}
+
+model Application {
+  id        Int      @id @default(autoincrement())
+  jobId     Int
+  job       Job      @relation(fields: [jobId], references: [id])
+  staffId   String
+  staff     User     @relation("StaffApplications", fields: [staffId], references: [id])
+  status    String   @default("pending") // pending, accepted, rejected, withdrawn
+  message   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Booking {
+  id            Int      @id @default(autoincrement())
+  jobId         Int
+  job           Job      @relation(fields: [jobId], references: [id])
+  staffId       String
+  staff         User     @relation("StaffBookings", fields: [staffId], references: [id])
+  organizerId   String
+  organizer     User     @relation("OrganizerBookings", fields: [organizerId], references: [id])
+  status        String   @default("confirmed") // confirmed, cancelled, completed
+  totalAmount   Float
+  serviceFee    Float
+  paymentStatus String   @default("pending") // pending, paid, refunded
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  reviews       Review[]
+}
+
+model Review {
+  id          Int      @id @default(autoincrement())
+  bookingId   Int
+  booking     Booking  @relation(fields: [bookingId], references: [id])
+  reviewerId  String
+  reviewer    User     @relation("ReviewerRelation", fields: [reviewerId], references: [id])
+  revieweeId  String
+  reviewee    User     @relation("RevieweeRelation", fields: [revieweeId], references: [id])
+  rating      Int
+  comment     String?
+  createdAt   DateTime @default(now())
 }
