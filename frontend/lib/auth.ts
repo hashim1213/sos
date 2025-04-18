@@ -45,7 +45,13 @@ export async function auth() {
   }
 }
 
-export function requireAuth(redirectTo: string) {
+export async function getAuthToken() {
+  var cookieStore = await cookies()
+  var res = cookieStore.get("accessToken")
+  return res
+}
+
+export async function requireAuth(redirectTo: string) {
   return async () => {
     const session = await auth()
     if (!session) {
@@ -73,7 +79,7 @@ export async function clearAuthToken() {
   const cookieStore = await cookies()
   cookieStore.delete("accessToken")
 }
-
+/*
 export function createToken(user: User): string {
   // This is a simplified example - in production, use a proper JWT library
   const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64")
@@ -94,3 +100,24 @@ export function createToken(user: User): string {
 
   return `${header}.${payload}.${signature}`
 }
+*/
+
+/*
+export async function useAuth() {
+  const router = useRouter()
+
+  const logout = () => {
+    clearAuthToken()
+    router.push("/")
+  }
+
+  const isAuthenticated = () => {
+    return !!getAuthToken()
+  }
+
+  return {
+    logout,
+    isAuthenticated,
+  }
+}
+  */

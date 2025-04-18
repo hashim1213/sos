@@ -75,7 +75,7 @@ export async function logout() {
   cookieStore.delete("refreshToken")
 
   // Redirect to home page
-  redirect("/")
+  //redirect("/")
 }
 
 // Register action

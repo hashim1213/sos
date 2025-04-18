@@ -6,18 +6,29 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu } from "lucide-react"
 import { useRouter } from "next/navigation"
+//import { clearAuthToken } from "@/lib/auth"
+import { logout } from "@/app/actions/auth-actions"
 import { auth } from "@/lib/auth"
+
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
-  
+  //const { logout, isAuthenticated } = useAuth()
   //const session = await auth()
+  const session = await auth()
 
-  const router = useRouter()
+  //const router = useRouter()
 
   const handleLogout = async () => {
     //await signOut()
-    router.push("/")
+    await logout()
+    //await clearAuthToken()
+  }
+
+  const isAuthenticated = () => {
+    //await signOut()
+    //logout()
+    return true
   }
 
   return (
@@ -45,13 +56,13 @@ export function Navbar() {
             How It Works
           </Link>
           <div>
-          {true ? (
-              <Button size="lg" variant="secondary" asChild className="bg-white text-primary hover:bg-gray-100">
-                <Link href="/login"><p><strong>Logout</strong></p></Link>
+          {isAuthenticated() ? (
+              <Button onClick={handleLogout} size="lg" variant="secondary" asChild className="bg-white text-primary hover:bg-gray-100">
+                <Link href="/"><p><strong>Logout</strong></p></Link>
               </Button>
             ) :
           <Button size="lg" variant="secondary" asChild className="bg-white text-primary hover:bg-gray-100">
-            <Link href="/"><p><strong>Login</strong></p></Link>
+            <Link href="/login"><p><strong>Login</strong></p></Link>
           </Button>
           }
           
@@ -73,7 +84,7 @@ export function Navbar() {
               <Link href="#how-it-works" className="text-lg font-medium hover:text-primary">
                 How It Works
               </Link>
-              {true ? (
+              {isAuthenticated() ? (
               <Button
                 size="lg"
                 variant="secondary"
