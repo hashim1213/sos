@@ -11,11 +11,11 @@ import { logout } from "@/app/actions/auth-actions"
 import { auth } from "@/lib/auth"
 
 
-export function Navbar() {
+export function Navbar( {session} : any) {
   const [isScrolled, setIsScrolled] = useState(false)
   //const { logout, isAuthenticated } = useAuth()
   //const session = await auth()
-  const session = await auth()
+  //const session = await auth()
 
   //const router = useRouter()
 
@@ -28,7 +28,7 @@ export function Navbar() {
   const isAuthenticated = () => {
     //await signOut()
     //logout()
-    return true
+    return session
   }
 
   return (

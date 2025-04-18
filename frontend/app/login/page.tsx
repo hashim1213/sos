@@ -25,7 +25,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <Navbar />
+      <Navbar session={session}/>
       <main className="flex-1 py-10">
         <div className="container mx-auto px-4 md:px-6">
           <div className="mx-auto max-w-md">

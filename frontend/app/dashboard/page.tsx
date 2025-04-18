@@ -156,7 +156,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <Navbar />
+      <Navbar session={session}/>
       <main className="flex-1 py-10">
         <div className="container mx-auto px-4 md:px-6">
           <h1 className="mb-6 text-2xl font-bold">Dashboard</h1>
