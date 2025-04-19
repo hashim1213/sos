@@ -1,4 +1,4 @@
-import { Shield, Award, BadgeCheck, Clock, Star, FileText } from 'lucide-react';
+import { Shield, Award, BadgeCheck, Star } from 'lucide-react';
 
 const Verification = () => {
   return (

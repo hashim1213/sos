@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight, Building2, UserCircle, Search, User, Calendar } from 'lucide-react';
+import { Building2, UserCircle, Search, User, Calendar } from 'lucide-react';
 import { UserPathType } from '../../types';
 import { useState } from 'react';
 

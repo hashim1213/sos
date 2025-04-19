@@ -63,7 +63,7 @@ const Benefits = () => {
             </div>
             <h3 className="text-xl font-bold mb-3 text-gray-900">Nationwide Coverage</h3>
             <p className="text-gray-700">
-              From weddings in Banff to construction in Vancouver to retail in Toronto - we've got Canada covered with workers in cities across the country.
+              From weddings in Banff to construction in Vancouver to retail in Toronto - we&rsquo;ve got Canada covered with workers in cities across the country.
             </p>
           </div>
           
@@ -82,7 +82,7 @@ const Benefits = () => {
         {/* Testimonial/Highlight */}
         <div className="max-w-4xl mx-auto mt-16 bg-red-50 p-8 rounded-xl">
           <blockquote className="text-xl text-gray-700 italic text-center">
-            "For a 4-hour shift with 5 workers, a traditional agency costs about $850. With SOS, the same quality staff costs just $625 — that's a <span className="font-bold text-red-600">26% savings</span> per event."
+            &ldquo;For a 4-hour shift with 5 workers, a traditional agency costs about $850. With SOS, the same quality staff costs just $625 — that&rsquo;s a <span className="font-bold text-red-600">26% savings</span> per event.&rdquo;
           </blockquote>
         </div>
       </div>

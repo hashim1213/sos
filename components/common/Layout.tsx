@@ -18,7 +18,7 @@ const Layout = ({ children, userPath, setUserPath }: LayoutProps) => {
       <main className="flex-grow">
         {children}
       </main>
-      <Footer userPath={userPath} setUserPath={setUserPath} />
+      <Footer setUserPath={setUserPath} />
     </div>
   );
 };

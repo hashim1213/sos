@@ -4,18 +4,17 @@ import { UserPathType } from '../../types';
 import { Facebook, Instagram, Twitter, Linkedin } from 'lucide-react';
 
 interface FooterProps {
-  userPath: UserPathType;
   setUserPath: (path: UserPathType) => void;
 }
 
-const Footer = ({ userPath, setUserPath }: FooterProps) => {
+const Footer = ({ setUserPath }: FooterProps) => {
   return (
     <footer className="bg-gray-900 text-white pt-12 pb-6">
       <div className="container mx-auto px-4">
         {/* Main footer content */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Logo and company info */}
-          <div className="col-span-1 md:col-span-1">
+          <div className="col-span-1">
             <div className="mb-4">
               <img
                 src="/logo_white.png" 
@@ -24,7 +23,7 @@ const Footer = ({ userPath, setUserPath }: FooterProps) => {
               />
             </div>
             <p className="text-gray-400 text-sm mb-4">
-              On-demand staffing for events, construction, retail, and more. Get reliable staff when you need them most.
+              On-demand staffing for events, construction, retail, and more.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition">
@@ -42,27 +41,13 @@ const Footer = ({ userPath, setUserPath }: FooterProps) => {
             </div>
           </div>
 
-          {/* Company links */}
+          {/* Quick Links */}
           <div className="col-span-1">
-            <h3 className="text-white font-bold mb-4">Company</h3>
+            <h3 className="text-white font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li><a href="#about" className="text-gray-400 hover:text-white transition">About Us</a></li>
               <li><a href="#how-it-works" className="text-gray-400 hover:text-white transition">How It Works</a></li>
-              <li><a href="#testimonials" className="text-gray-400 hover:text-white transition">Testimonials</a></li>
-              <li><a href="#blog" className="text-gray-400 hover:text-white transition">Blog</a></li>
               <li><a href="#contact" className="text-gray-400 hover:text-white transition">Contact</a></li>
-            </ul>
-          </div>
-
-          {/* Industries */}
-          <div className="col-span-1">
-            <h3 className="text-white font-bold mb-4">Industries</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#events" className="text-gray-400 hover:text-white transition">Events & Hospitality</a></li>
-              <li><a href="#construction" className="text-gray-400 hover:text-white transition">Construction</a></li>
-              <li><a href="#retail" className="text-gray-400 hover:text-white transition">Retail</a></li>
-              <li><a href="#warehouse" className="text-gray-400 hover:text-white transition">Warehouse</a></li>
-              <li><a href="#office" className="text-gray-400 hover:text-white transition">Office Support</a></li>
             </ul>
           </div>
 
@@ -94,7 +79,6 @@ const Footer = ({ userPath, setUserPath }: FooterProps) => {
           <div className="flex space-x-6 text-sm">
             <a href="#terms" className="text-gray-500 hover:text-white transition">Terms</a>
             <a href="#privacy" className="text-gray-500 hover:text-white transition">Privacy</a>
-            <a href="#cookies" className="text-gray-500 hover:text-white transition">Cookies</a>
           </div>
         </div>
       </div>

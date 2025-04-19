@@ -21,7 +21,7 @@ const CommonScenarios = () => {
                 </div>
                 <div>
                   <h3 className="font-bold text-xl mb-3 text-gray-900">Events &amp; Hospitality</h3>
-                  <p className="text-gray-700 italic mb-4">"Half my staff just canceled for tomorrow's event!"</p>
+                  <p className="text-gray-700 italic mb-4">&ldquo;Half my staff just canceled for tomorrow&rsquo;s event!&rdquo;</p>
                   <p className="text-gray-600">With SOS, find vetted, qualified replacements within hours. Get bartenders, servers, security, and setup crews when you need them most.</p>
                 </div>
               </div>
@@ -35,7 +35,7 @@ const CommonScenarios = () => {
                 </div>
                 <div>
                   <h3 className="font-bold text-xl mb-3 text-gray-900">Construction &amp; Labor</h3>
-                  <p className="text-gray-700 italic mb-4">"I need five more workers on the construction site by tomorrow morning."</p>
+                  <p className="text-gray-700 italic mb-4">&ldquo;I need five more workers on the construction site by tomorrow morning.&rdquo;</p>
                   <p className="text-gray-600">SOS can provide qualified labor for your construction site with little notice. Fill gaps in your crew and keep projects on schedule.</p>
                 </div>
               </div>
@@ -49,7 +49,7 @@ const CommonScenarios = () => {
                 </div>
                 <div>
                   <h3 className="font-bold text-xl mb-3 text-gray-900">Large-Scale Events</h3>
-                  <p className="text-gray-700 italic mb-4">"I need 300 people for the Winnipeg Folk Festival in three days."</p>
+                  <p className="text-gray-700 italic mb-4">&ldquo;I need 300 people for the Winnipeg Folk Festival in three days.&rdquo;</p>
                   <p className="text-gray-600">SOS can scale to help you staff large events on short notice. Our platform efficiently matches hundreds of qualified workers to your requirements.</p>
                 </div>
               </div>
@@ -63,7 +63,7 @@ const CommonScenarios = () => {
                 </div>
                 <div>
                   <h3 className="font-bold text-xl mb-3 text-gray-900">Retail &amp; Warehouse</h3>
-                  <p className="text-gray-700 italic mb-4">"We just received a huge unexpected order and need extra hands in the warehouse."</p>
+                  <p className="text-gray-700 italic mb-4">&ldquo;We just received a huge unexpected order and need extra hands in the warehouse.&rdquo;</p>
                   <p className="text-gray-600">From seasonal rushes to unexpected demand, SOS connects you with retail associates and warehouse workers to handle increased workload.</p>
                 </div>
               </div>
