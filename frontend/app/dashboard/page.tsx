@@ -82,9 +82,6 @@ async function StaffDashboard() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Your Job Applications</h2>
-        <Button asChild>
-          <Link href="/jobs">Find Jobs</Link>
-        </Button>
       </div>
 
       {applications.length > 0 ? (
