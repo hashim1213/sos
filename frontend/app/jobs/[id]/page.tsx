@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import { format } from "date-fns"
 import { getJobById } from "@/app/actions/job-actions"
 import { JobApplicationForm } from "@/components/job-application-form"
@@ -42,6 +42,10 @@ async function JobDetails({ jobId }: { jobId: number }) {
   const isStaff = session?.user.role === "STAFF"
   const isOrganizer = session?.user.role === "ORGANIZER"
   const isJobOwner = isOrganizer && session?.user.id === job.organizerId
+
+  if (!session) {
+    redirect("/")
+  }
 
   return (
     <div className="space-y-6">
@@ -192,7 +196,7 @@ async function JobDetails({ jobId }: { jobId: number }) {
 export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
   const jobId = Number.parseInt(params.id)
   const session = await auth()
-  
+
   if (isNaN(jobId)) {
     notFound()
   }

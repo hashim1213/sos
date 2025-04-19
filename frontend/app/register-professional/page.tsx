@@ -1,7 +1,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -189,14 +189,14 @@ export default async function RegisterProfessionalPage() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitError("");
-  
+
     // Log initial state for debugging
     console.log("Initial form state:", JSON.stringify(formData));
-  
+
     try {
       // Create a new FormData instance
       const fd = new FormData();
-  
+
       // Convert formData state to FormData instance
       Object.entries(formData).forEach(([key, value]) => {
         if (key === "availability" && value) {
@@ -206,7 +206,7 @@ export default async function RegisterProfessionalPage() {
           });
         } else if (key === "skills" && Array.isArray(value)) {
           // Append each skill separately
-          value.forEach((skill : any) => fd.append("skills", skill));
+          value.forEach((skill: any) => fd.append("skills", skill));
         } else if (key === "certifications" && Array.isArray(value)) {
           // Append each certification as a JSON string
           value.forEach((cert) => fd.append("certifications", JSON.stringify(cert)));
@@ -218,17 +218,17 @@ export default async function RegisterProfessionalPage() {
           fd.append(key, value as string | Blob);
         }
       });
-  
+
       // Optional: Debug the FormData entries
       const entries = Array.from(fd.entries());
       console.log("FormData entries:", entries);
-  
+
       // Submit the FormData object
       const result = await registerProfessional(fd);
       if (!result.success) {
         throw new Error(result.error);
       }
-  
+
       // On success, mark as submitted and reset the state
       setSubmitted(true);
       setFormData({
@@ -275,9 +275,13 @@ export default async function RegisterProfessionalPage() {
 
   const session = await auth()
 
+  if (!session) {
+    redirect("/")
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <Navbar session={session}/>
+      <Navbar session={session} />
       <main className="flex-1">
         <div className="bg-gradient-to-r from-black to-gray-900 py-12 text-white">
           <div className="container mx-auto px-4 md:px-6">
@@ -296,33 +300,29 @@ export default async function RegisterProfessionalPage() {
                   <h2 className="text-2xl font-bold text-primary">Professional Registration</h2>
                   <div className="flex items-center gap-2">
                     <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                        step >= 1 ? "bg-primary text-white" : "bg-gray-200"
-                      }`}
+                      className={`flex h-8 w-8 items-center justify-center rounded-full ${step >= 1 ? "bg-primary text-white" : "bg-gray-200"
+                        }`}
                     >
                       1
                     </div>
                     <div className={`h-1 w-8 ${step >= 2 ? "bg-primary" : "bg-gray-200"}`}></div>
                     <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                        step >= 2 ? "bg-primary text-white" : "bg-gray-200"
-                      }`}
+                      className={`flex h-8 w-8 items-center justify-center rounded-full ${step >= 2 ? "bg-primary text-white" : "bg-gray-200"
+                        }`}
                     >
                       2
                     </div>
                     <div className={`h-1 w-8 ${step >= 3 ? "bg-primary" : "bg-gray-200"}`}></div>
                     <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                        step >= 3 ? "bg-primary text-white" : "bg-gray-200"
-                      }`}
+                      className={`flex h-8 w-8 items-center justify-center rounded-full ${step >= 3 ? "bg-primary text-white" : "bg-gray-200"
+                        }`}
                     >
                       3
                     </div>
                     <div className={`h-1 w-8 ${step >= 4 ? "bg-primary" : "bg-gray-200"}`}></div>
                     <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                        step >= 4 ? "bg-primary text-white" : "bg-gray-200"
-                      }`}
+                      className={`flex h-8 w-8 items-center justify-center rounded-full ${step >= 4 ? "bg-primary text-white" : "bg-gray-200"
+                        }`}
                     >
                       4
                     </div>
@@ -401,48 +401,48 @@ export default async function RegisterProfessionalPage() {
 
                       <div className="grid gap-4 md:grid-cols-4">
                         <div>
-                        <Label htmlFor="Address">Address*</Label>
-                        <Input
-                          id="address"
-                          name="address"
-                          placeholder="123 Street"
-                          value={formData.address}
-                          onChange={handleChange}
-                          required
-                        />
+                          <Label htmlFor="Address">Address*</Label>
+                          <Input
+                            id="address"
+                            name="address"
+                            placeholder="123 Street"
+                            value={formData.address}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                         <div>
-                        <Label htmlFor="city">City*</Label>
-                        <Input
-                          id="city"
-                          name="city"
-                          placeholder="Toronto"
-                          value={formData.city}
-                          onChange={handleChange}
-                          required
-                        />
+                          <Label htmlFor="city">City*</Label>
+                          <Input
+                            id="city"
+                            name="city"
+                            placeholder="Toronto"
+                            value={formData.city}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                         <div className="md:px-12">
-                        <Label htmlFor="province">Province *</Label>
-                        <Input
-                          id="province"
-                          name="province"
-                          placeholder="ON"
-                          value={formData.province}
-                          onChange={handleChange}
-                          required
-                        />
+                          <Label htmlFor="province">Province *</Label>
+                          <Input
+                            id="province"
+                            name="province"
+                            placeholder="ON"
+                            value={formData.province}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                         <div className="md:px-8">
-                        <Label htmlFor="postalcode">Postal code *</Label>
-                        <Input
-                          id="postalcode"
-                          name="postalcode"
-                          placeholder="R1C 1A1"
-                          value={formData.postalcode}
-                          onChange={handleChange}
-                          required
-                        />
+                          <Label htmlFor="postalcode">Postal code *</Label>
+                          <Input
+                            id="postalcode"
+                            name="postalcode"
+                            placeholder="R1C 1A1"
+                            value={formData.postalcode}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
 
                       </div>

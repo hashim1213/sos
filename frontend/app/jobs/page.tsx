@@ -6,6 +6,7 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
 import { auth } from "@/lib/auth"
+import { redirect } from "next/navigation"
 
 async function JobsList() {
   const jobs = await getOpenJobs()
@@ -41,9 +42,13 @@ async function JobsList() {
 
 export default async function JobsPage() {
   const session = await auth()
+  if (!session) {
+    redirect("/")
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <Navbar session={session}/>
+      <Navbar session={session} />
       <main className="flex-1 py-10">
         <div className="container mx-auto px-4 md:px-6">
           <Suspense fallback={<div>Loading jobs...</div>}>

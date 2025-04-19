@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { JobDetailsForm } from "@/components/job-details-form"
@@ -57,6 +57,10 @@ export default async function HirePage() {
 
   const session = await auth()
 
+  if (!session) {
+    redirect("/")
+  }
+  
   return (
     <div className="flex min-h-screen flex-col bg-white">
       <Navbar session={session}/>

@@ -12,7 +12,6 @@ export default async function Home() {
   //const resolvedSearchParams = await Promise.resolve(searchParams)
 
   const session = await auth()
-
   if (session) {
     redirect("/dashboard")
   }

@@ -1,7 +1,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
+import { redirect, useSearchParams } from "next/navigation"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { ProfessionalsList } from "@/components/professionals-list"
@@ -36,6 +36,10 @@ export default async function ProfessionalsPage() {
   }
 
   const session = await auth()
+
+  if (!session) {
+    redirect("/")
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-white">

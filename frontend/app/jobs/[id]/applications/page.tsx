@@ -20,10 +20,14 @@ interface ApplicationsPageProps {
 async function ApplicationsList({ jobId }: { jobId: number }) {
   const session = await auth()
 
-  // Redirect if not logged in or not an organizer
-  if (!session || session.user.role !== "ORGANIZER") {
-    redirect("/login?callbackUrl=/jobs/${jobId}/applications")
+  if (!session) {
+    redirect("/")
   }
+
+  // Redirect if not logged in or not an organizer
+  //if (!session || session.user.role !== "ORGANIZER") {
+  //  redirect("/login?callbackUrl=/jobs/${jobId}/applications")
+  //}
 
   const job = await getJobById(jobId)
 
@@ -136,6 +140,10 @@ export default async function ApplicationsPage({ params }: ApplicationsPageProps
   }
 
   const session = await auth()
+
+  if (!session) {
+    redirect("/")
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
