@@ -7,11 +7,13 @@ import Footer from './Footer';
 
 interface LayoutProps {
   children: ReactNode;
-  userPath: UserPathType;
+  userPath: UserPathType; // Keep this in the interface
   setUserPath: (path: UserPathType) => void;
 }
 
-const Layout = ({ children, setUserPath }: Omit<LayoutProps, 'userPath'>) => {
+// Keep userPath in the component parameters to match the interface
+const Layout = ({ children, setUserPath }: LayoutProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
