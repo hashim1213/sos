@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 //import { clearAuthToken } from "@/lib/auth"
 import { logout } from "@/app/actions/auth-actions"
 import { auth } from "@/lib/auth"
@@ -22,6 +22,7 @@ export function Navbar( {session} : any) {
   const handleLogout = async () => {
     //await signOut()
     await logout()
+    redirect("/")
     //await clearAuthToken()
   }
 
@@ -49,12 +50,6 @@ export function Navbar( {session} : any) {
           </Link>
         </div>
         <nav className="hidden md:flex md:items-center md:gap-6">
-          <Link href="#features" className="text-sm font-medium text-white hover:text-primary">
-            Features
-          </Link>
-          <Link href="#how-it-works" className="text-sm font-medium text-white hover:text-primary">
-            How It Works
-          </Link>
           <div>
           {isAuthenticated() ? (
               <Button onClick={handleLogout} size="lg" variant="secondary" asChild className="bg-white text-primary hover:bg-gray-100">

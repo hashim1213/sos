@@ -57,7 +57,8 @@ export async function getOpenJobs(): Promise<JobWithOrganizer[]> {
         return await getOpenJobsFromDb()
     } catch (error) {
         console.error("Error fetching open jobs:", error)
-        throw new Error("Failed to fetch open jobs")
+        //throw new Error("Failed to fetch open jobs")
+        return []
     }
 }
 
@@ -73,7 +74,7 @@ export async function getJobById(jobId: number): Promise<JobWithOrganizer | null
 
 // Get jobs posted by the current organizer
 export async function getOrganizerJobs(): Promise<Job[]> {
-    requireAuth("/login?callbackUrl=/dashboard")
+    //requireAuth("/login?callbackUrl=/dashboard")
 
     const session = await auth()
 

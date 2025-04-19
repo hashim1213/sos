@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
@@ -12,8 +10,9 @@ import { Footer } from "@/components/footer"
 import { CheckCircle2 } from "lucide-react"
 import type { StaffMember, JobDetails } from "@/lib/types"
 import { generateStaffMembers } from "@/lib/dummy-data"
+import { auth } from "@/lib/auth"
 
-export default function HirePage() {
+export default async function HirePage() {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [jobDetails, setJobDetails] = useState<JobDetails | null>(null)
@@ -56,9 +55,11 @@ export default function HirePage() {
     window.scrollTo(0, 0)
   }
 
+  const session = await auth()
+
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <Navbar />
+      <Navbar session={session}/>
       <main className="flex-1 py-10">
         <div className="container mx-auto px-4 md:px-6">
           {!isBookingConfirmed ? (

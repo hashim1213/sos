@@ -230,7 +230,7 @@ export function JobDetailsForm({ onSubmit }: JobDetailsFormProps) {
             <Input
               id="city"
               name="city"
-              placeholder="Winnipeg"
+              placeholder="New York"
               value={formData.city}
               onChange={handleChange}
               className={cn(errors.city && "border-red-500")}
@@ -238,11 +238,11 @@ export function JobDetailsForm({ onSubmit }: JobDetailsFormProps) {
             {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
           </div>
           <div>
-            <Label htmlFor="state">Province</Label>
+            <Label htmlFor="state">State</Label>
             <Input
               id="state"
               name="state"
-              placeholder="MB"
+              placeholder="NY"
               value={formData.state}
               onChange={handleChange}
               className={cn(errors.state && "border-red-500")}
@@ -250,11 +250,11 @@ export function JobDetailsForm({ onSubmit }: JobDetailsFormProps) {
             {errors.state && <p className="mt-1 text-sm text-red-500">{errors.state}</p>}
           </div>
           <div>
-            <Label htmlFor="zipCode">Postal Code</Label>
+            <Label htmlFor="zipCode">ZIP Code</Label>
             <Input
               id="zipCode"
               name="zipCode"
-              placeholder="R3C2M5"
+              placeholder="10001"
               value={formData.zipCode}
               onChange={handleChange}
               className={cn(errors.zipCode && "border-red-500")}

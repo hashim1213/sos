@@ -2,14 +2,9 @@
 
 import { revalidatePath } from "next/cache"
 import { auth, requireAuth } from "@/lib/auth"
-import {
-  applyForJobInDb,
-  getJobApplicationsFromDb,
-  getStaffApplicationsFromDb,
-  updateApplicationStatusInDb,
-} from "@/lib/db/jobs"
 import type { ApplicationWithStaffAndJob } from "@/lib/types"
 
+/*
 // Apply for a job
 export async function applyForJob(formData: FormData) {
   // Check authentication
@@ -106,3 +101,4 @@ export async function updateApplicationStatus(formData: FormData) {
     throw new Error(error instanceof Error ? error.message : "Failed to update application status")
   }
 }
+*/

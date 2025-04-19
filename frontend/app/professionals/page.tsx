@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 
 import { useState, useEffect } from "react"
@@ -12,8 +10,9 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search } from "lucide-react"
 import type { FilterValues } from "@/components/professional-filters"
+import { auth } from "@/lib/auth"
 
-export default function ProfessionalsPage() {
+export default async function ProfessionalsPage() {
   const searchParams = useSearchParams()
   const queryParam = searchParams.get("q") || ""
 
@@ -36,9 +35,11 @@ export default function ProfessionalsPage() {
     setFilters(newFilters)
   }
 
+  const session = await auth()
+
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <Navbar />
+      <Navbar session={session}/>
       <main className="flex-1">
         <div className="bg-gradient-to-r from-black to-gray-900 py-12 text-white">
           <div className="container mx-auto px-4 md:px-6">

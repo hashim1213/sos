@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 
 import { useState } from "react"
@@ -15,8 +13,9 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { CheckCircle2, Upload } from "lucide-react"
 import { registerProfessional } from "@/app/actions/professional-actions"
+import { auth } from "@/lib/auth"
 
-export default function RegisterProfessionalPage() {
+export default async function RegisterProfessionalPage() {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -274,9 +273,11 @@ export default function RegisterProfessionalPage() {
     }
   }
 
+  const session = await auth()
+
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <Navbar />
+      <Navbar session={session}/>
       <main className="flex-1">
         <div className="bg-gradient-to-r from-black to-gray-900 py-12 text-white">
           <div className="container mx-auto px-4 md:px-6">
