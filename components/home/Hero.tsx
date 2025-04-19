@@ -15,6 +15,20 @@ const Hero = ({ userPath, setUserPath }: HeroProps) => {
   const [checkComplete, setCheckComplete] = useState(false);
   const [isAvailable, setIsAvailable] = useState(false);
 
+  // List of Manitoba cities and towns
+  const manitobaCities = [
+    'winnipeg', 'brandon', 'steinbach', 'thompson', 'portage la prairie', 
+    'winkler', 'selkirk', 'morden', 'dauphin', 'flin flon', 'the pas',
+    'swan river', 'virden', 'neepawa', 'beausejour', 'stonewall', 'niverville',
+    'altona', 'carman', 'morris', 'gimli', 'russell', 'killarney', 'minnedosa',
+    'roblin', 'carberry', 'rivers', 'boissevain', 'pilot mound', 'melita', 
+    'souris', 'hamiota', 'teulon', 'arborg', 'leaf rapids', 'snow lake',
+    'churchill', 'gillam', 'grand rapids', 'powerview-pine falls', 'pinawa', 
+    'lac du bonnet', 'emerson', 'gretna', 'dominion city', 'st. adolphe', 
+    'st. claude', 'notre dame de lourdes', 'macgregor', 'grandview', 
+    'ste. anne', 'st. pierre-jolys', 'rossburn', 'fisher branch', 'gladstone'
+  ];
+
   const checkAvailability = () => {
     if (!location.trim()) return;
     
@@ -23,11 +37,19 @@ const Hero = ({ userPath, setUserPath }: HeroProps) => {
     
     // Simulate a check process
     setTimeout(() => {
-      // Check if the location contains Manitoba or Winnipeg (case insensitive)
-      const isInManitoba = location.toLowerCase().includes('manitoba') || 
-                           location.toLowerCase().includes('winnipeg');
+      // Check if the location is in Manitoba
+      const locationLower = location.toLowerCase().trim();
       
-      setIsAvailable(isInManitoba);
+      // Check if it contains Manitoba directly
+      const containsManitoba = locationLower.includes('manitoba');
+      
+      // Check if it matches any Manitoba city/town
+      const isManitobaCityOrTown = manitobaCities.some(city => 
+        locationLower.includes(city) || 
+        city.includes(locationLower)
+      );
+      
+      setIsAvailable(containsManitoba || isManitobaCityOrTown);
       setCheckComplete(true);
       setIsChecking(false);
     }, 2500); // Animation runs for 2.5 seconds
