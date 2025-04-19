@@ -209,6 +209,27 @@ const Hero = ({ userPath, setUserPath }: HeroProps) => {
                 : 'Find flexible work that fits your schedule across multiple industries.'}
             </p>
             
+            {/* Call to Action Button */}
+            <div className="mb-10">
+              {userPath === 'organizer' ? (
+                <a 
+                  href="#signup" 
+                  className="inline-flex items-center justify-center px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md transition font-medium text-lg"
+                >
+                  <Building2 className="mr-2" size={20} />
+                  Join Waitlist for Businesses
+                </a>
+              ) : (
+                <a 
+                  href="#signup" 
+                  className="inline-flex items-center justify-center px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md transition font-medium text-lg"
+                >
+                  <UserCircle className="mr-2" size={20} />
+                  Apply Now as Shifter
+                </a>
+              )}
+            </div>
+            
             <button
               onClick={() => setUserPath(null)}
               className="text-sm text-gray-500 hover:text-gray-700 flex items-center mx-auto"
