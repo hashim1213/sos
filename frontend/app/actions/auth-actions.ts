@@ -79,6 +79,7 @@ export async function logout() {
 }
 
 // Register action
+/*
 export async function register(formData: FormData) {
   const firstName = formData.get("firstName") as string
   const lastName = formData.get("lastName") as string
@@ -124,3 +125,4 @@ export async function register(formData: FormData) {
     }
   }
 }
+*/

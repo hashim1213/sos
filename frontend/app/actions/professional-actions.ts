@@ -11,7 +11,10 @@ export async function registerProfessional(formData: FormData) {
       lastName: formData.get("lastName"),
       email: formData.get("email"),
       phone: formData.get("phone"),
-      location: formData.get("location"),
+      address: formData.get("address"),
+      city: formData.get("city"),
+      province: formData.get("province"),
+      postalcode: formData.get("postalcode"),
       // Professional Details
       jobTitle: formData.get("jobTitle"),
       hourlyRate: Number.parseFloat(formData.get("hourlyRate") as string) || 0,

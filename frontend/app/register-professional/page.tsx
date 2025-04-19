@@ -402,9 +402,9 @@ export default function RegisterProfessionalPage() {
                         <div>
                         <Label htmlFor="Address">Address*</Label>
                         <Input
-                          id="location"
-                          name="location"
-                          placeholder="123 street"
+                          id="address"
+                          name="address"
+                          placeholder="123 Street"
                           value={formData.address}
                           onChange={handleChange}
                           required
@@ -433,11 +433,11 @@ export default function RegisterProfessionalPage() {
                         />
                         </div>
                         <div className="md:px-8">
-                        <Label htmlFor="province">Postal code *</Label>
+                        <Label htmlFor="postalcode">Postal code *</Label>
                         <Input
-                          id="province"
-                          name="province"
-                          placeholder="ON"
+                          id="postalcode"
+                          name="postalcode"
+                          placeholder="R1C 1A1"
                           value={formData.postalcode}
                           onChange={handleChange}
                           required

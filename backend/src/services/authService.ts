@@ -23,19 +23,19 @@ class AuthService {
       // Additional fields based on role
       ...additionalData
     } = userData
-
+  
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     })
-
+  
     if (existingUser) {
       throw new Error("User with this email already exists")
     }
-
+  
     // Hash password
     const passwordHash = await bcrypt.hash(password, 10)
-
+  
     // Create user with transaction to ensure both user and role-specific data are created
     return await prisma.$transaction(async (prisma) => {
       // Create user
@@ -49,7 +49,7 @@ class AuthService {
           role,
         },
       })
-
+  
       // Create role-specific profile
       if (role === UserRole.STAFF) {
         const {
@@ -66,38 +66,73 @@ class AuthService {
           preferredHours,
           noticeRequired,
         } = additionalData as any
+  
+        // Create location if address is provided
+        console.log(address)
 
+        let locationId = null
+        if (address) {
+          const location = await prisma.location.create({
+            data: {
+              address,
+              city,
+              province,
+              postalCode,
+            },
+          })
+          locationId = location.id
+        }
+  
         await prisma.staff.create({
           data: {
             userId: user.id,
             bio,
             jobTitle,
-            hourlyRate: hourlyRate ? Number(hourlyRate) : null,
+            hourlyRate: hourlyRate ? Number(hourlyRate) : undefined,
             yearsExperience,
             skills: skills || [],
-            address,
-            city,
-            province,
-            postalCode,
+            locationId,
             availableDays: availableDays || [],
             preferredHours,
             noticeRequired,
           },
         })
       } else if (role === UserRole.ORGANIZER) {
-        const { companyName, bio, location, eventTypes } = additionalData as any
-
+        const { 
+          companyName, 
+          bio, 
+          eventTypes,
+          address,
+          city,
+          province,
+          postalCode
+        } = additionalData as any
+  
+        // Create location if address is provided
+        let locationId = null
+        if (address) {
+          const location = await prisma.location.create({
+            data: {
+              address,
+              city,
+              province,
+              postalCode,
+            },
+          })
+          locationId = location.id
+        }
+  
         await prisma.organizer.create({
           data: {
             userId: user.id,
             companyName,
             bio,
-            location,
+            locationId,
             eventTypes: eventTypes || [],
           },
         })
       }
-
+  
       // Return user without password hash
       const { passwordHash: _, ...userData } = user
       return userData as UserResponse

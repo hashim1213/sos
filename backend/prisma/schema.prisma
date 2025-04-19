@@ -14,19 +14,72 @@ enum UserRole {
   STAFF
   ORGANIZER
   ADMIN
+  SUPPORT
+}
+
+enum SubscriptionTier {
+  FREE
+  BASIC
+  PREMIUM
+  ENTERPRISE
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
+
+enum NotificationChannel {
+  EMAIL
+  PUSH
+  SMS
+  IN_APP
+}
+
+enum DevicePlatform {
+  IOS
+  ANDROID
+  WEB
+}
+
+enum SyncStatus {
+  PENDING
+  SYNCED
+  FAILED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+}
+
+enum PaymentProvider {
+  STRIPE
+  PAYPAL
+  APPLE_PAY
+  GOOGLE_PAY
+  BANK_TRANSFER
 }
 
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
   passwordHash  String
-  firstName     String
-  lastName      String
+  firstName     String?
+  lastName      String?
   phone         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  role          UserRole
+  role          UserRole  @default(STAFF)
   verified      Boolean   @default(false)
+  lastActive    DateTime?
+  lastLoginAt   DateTime?
+  onboardingCompleted Boolean @default(false)
+  preferredLanguage String?  @default("en")
+  timezone      String?    @default("UTC")
   
   // Relations
   staff         Staff?
@@ -38,6 +91,46 @@ model User {
   staffBookings Booking[]     @relation("StaffBookings")
   reviewsGiven  Review[]      @relation("ReviewerRelation")
   reviewsReceived Review[]    @relation("RevieweeRelation")
+  notifications Notification[]
+  
+  // New relations
+  subscription  Subscription?
+  sentMessages     Message[]      @relation("MessageSender")
+  receivedMessages Message[]      @relation("MessageReceiver")
+  documents     Document[]
+  invoices      Invoice[]      @relation("InvoiceOwner")
+  invoicesPaid  Invoice[]      @relation("InvoicePayer")
+  disputes      Dispute[]      @relation("DisputeInitiator")
+  disputesAgainst Dispute[]    @relation("DisputeResponder")
+  savedJobs     SavedJob[]
+  savedProfiles SavedProfile[]
+  feedbacks     Feedback[]
+  loginHistory  LoginHistory[]
+  deviceTokens  DeviceToken[]
+  
+  // Additional relations
+  userPreferences UserPreference[]
+  userDevices     UserDevice[]
+  activityLogs    ActivityLog[]
+  achievements    UserAchievement[]
+  referrals       Referral[]      @relation("ReferrerRelation")
+  referredBy      Referral?       @relation("ReferredRelation")
+  walletTransactions WalletTransaction[]
+  calendarEvents  CalendarEvent[] @relation("EventOwner")
+  calendarEventAttendees CalendarEventAttendee[]
+  userMedia       UserMedia[]
+  supportTickets  SupportTicket[] @relation("TicketCreator")
+  supportResponses SupportResponse[]
+  apiKeys         ApiKey[]
+  userBadges      UserBadge[]
+  userRewards     UserReward[]
+  userNotes       UserNote[]      @relation("NoteSubject")
+  notesCreated    UserNote[]      @relation("NoteCreator")
+  userSegments    UserSegment[]
+  offlineActions  OfflineAction[]
+  userLocations   UserLocation[]
+  userSessions    UserSession[]
+  userVerifications UserVerification[]
 }
 
 model Staff {
@@ -48,17 +141,15 @@ model Staff {
   jobTitle        String?
   hourlyRate      Float?
   yearsExperience String?
-  skills          String[]
-  address         String?
-  city            String?
-  province        String?
-  postalCode      String?
+  skills          String[]  @default([])
+  locationId      String?
+  location        Location? @relation(fields: [locationId], references: [id])
   avatar          String?
   rating          Float     @default(0)
   reviewCount     Int       @default(0)
   
   // Availability
-  availableDays   String[]
+  availableDays   String[]  @default([])
   preferredHours  String?
   noticeRequired  String?
   
@@ -67,6 +158,37 @@ model Staff {
   
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  availabilities  Availability[]
+  certifications  StaffCertification[]
+  portfolioItems  PortfolioItem[]
+  
+  // New relations
+  savedByUsers    SavedProfile[]
+  taxInformation  TaxInformation?
+  bankDetails     BankDetail[]
+  emergencyContacts EmergencyContact[]
+  workHistory     WorkHistory[]
+  educationHistory EducationHistory[]
+  staffTags       StaffTag[]
+  
+  // Additional relations
+  shifts          Shift[]
+  breakTimes      BreakTime[]
+  payrollRecords  PayrollRecord[]
+  uniformAssignments UniformAssignment[]
+  equipmentAssignments EquipmentAssignment[]
+  staffRatings    StaffRating[]
+  staffNotes      StaffNote[]
+  trainingRecords TrainingRecord[]
+  staffAvailabilityExceptions StaffAvailabilityException[]
+  staffTeams      StaffTeam[]
+  staffSkillLevels StaffSkillLevel[]
+  staffPreferences StaffPreference[]
+  staffLocations  StaffLocation[]
+  staffSchedulePreferences StaffSchedulePreference[]
+  staffPerformanceMetrics StaffPerformanceMetric[]
 }
 
 model Organizer {
@@ -75,15 +197,59 @@ model Organizer {
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   companyName     String?
   bio             String?
-  address         String?
-  city            String?
-  province        String?
-  postalCode      String?
+  locationId      String?
+  location        Location? @relation(fields: [locationId], references: [id])
   eventTypes      String[]
   avatar          String?
   
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  
+  // New relations
+  businessDetails BusinessDetail?
+  savedByUsers    SavedProfile[]
+  organizerTags   OrganizerTag[]
+  
+  // Additional relations
+  departments     Department[]
+  venues          Venue[]        @relation("VenueOwner")
+  eventTemplates  EventTemplate[]
+  organizerLocations OrganizerLocation[]
+  organizerSettings OrganizerSetting[]
+  organizerDocuments OrganizerDocument[]
+  organizerContacts OrganizerContact[]
+  organizerBranding OrganizerBranding?
+  staffingRequirements StaffingRequirement[]
+}
+
+model Location {
+  id          String     @id @default(cuid())
+  address     String
+  city        String?
+  province    String?
+  postalCode  String?
+  country     String?    @default("Canada")
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  // Relations
+  staff       Staff[]
+  organizers  Organizer[]
+  jobs        Job[]
+  venues      Venue[]
+  
+  // Additional relations
+  geofences   Geofence[]
+  locationNotes LocationNote[]
+  locationMedia LocationMedia[]
+  locationHours LocationHour[]
+  locationAmenities LocationAmenity[]
+  locationTags LocationTag[]
+  staffLocations StaffLocation[]
+  organizerLocations OrganizerLocation[]
+  userLocations UserLocation[]
 }
 
 model RefreshToken {
@@ -102,12 +268,15 @@ model Job {
   organizer   User     @relation("OrganizerJobs", fields: [organizerId], references: [id])
   title       String
   description String?
-  jobType     String
-  location    String
-  date        DateTime
-  startTime   String
-  duration    Int
-  hourlyRate  Float
+  jobType     String?
+  locationId  String?
+  location    Location? @relation(fields: [locationId], references: [id])
+  venueId     String?
+  venue       Venue?   @relation(fields: [venueId], references: [id])
+  date        DateTime?
+  startTime   String?
+  duration    Int?
+  hourlyRate  Float?
   status      String   @default("open") // open, filled, cancelled, completed
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -115,6 +284,27 @@ model Job {
   // Relations
   applications Application[]
   bookings     Booking[]
+  requiredSkills JobSkill[]
+  requiredCertifications JobCertification[]
+  
+  // New relations
+  savedByUsers SavedJob[]
+  jobTags      JobTag[]
+  promotions   JobPromotion[]
+  contracts    Contract[]
+  
+  // Additional relations
+  shifts       Shift[]
+  jobMedia     JobMedia[]
+  jobNotes     JobNote[]
+  jobRequirements JobRequirement[]
+  jobQuestions JobQuestion[]
+  jobApplicantResponses JobApplicantResponse[]
+  jobVisibility JobVisibility[]
+  jobNotifications JobNotification[]
+  jobMetrics   JobMetric[]
+  jobFeedback  JobFeedback[]
+  staffingRequirements StaffingRequirement[]
 }
 
 model Application {
@@ -127,6 +317,15 @@ model Application {
   message   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  // New relations
+  applicationDocuments ApplicationDocument[]
+  
+  // Additional relations
+  applicationNotes ApplicationNote[]
+  applicationStatusHistory ApplicationStatusHistory[]
+  applicationResponses JobApplicantResponse[]
+  applicationRatings ApplicationRating[]
 }
 
 model Booking {
@@ -138,14 +337,31 @@ model Booking {
   organizerId   String
   organizer     User     @relation("OrganizerBookings", fields: [organizerId], references: [id])
   status        String   @default("confirmed") // confirmed, cancelled, completed
-  totalAmount   Float
-  serviceFee    Float
+  totalAmount   Float?
+  serviceFee    Float?
   paymentStatus String   @default("pending") // pending, paid, refunded
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   
   // Relations
   reviews       Review[]
+  timeEntries   TimeEntry[]
+  payments      Payment[]
+  
+  // New relations
+  invoices      Invoice[]
+  disputes      Dispute[]
+  checkIns      CheckIn[]
+  notes         BookingNote[]
+  contracts     Contract[]
+  
+  // Additional relations
+  bookingStatusHistory BookingStatusHistory[]
+  bookingMedia BookingMedia[]
+  bookingExpenses BookingExpense[]
+  bookingReminders BookingReminder[]
+  bookingFeedback BookingFeedback[]
+  bookingCommunications BookingCommunication[]
 }
 
 model Review {
@@ -159,4 +375,2819 @@ model Review {
   rating      Int
   comment     String?
   createdAt   DateTime @default(now())
+  
+  // New relations
+  reviewResponses ReviewResponse[]
+  reviewImages    ReviewImage[]
+  
+  // Additional relations
+  reviewCategories ReviewCategory[]
+  reviewHelpful   ReviewHelpful[]
+  reviewFlags     ReviewFlag[]
+}
+
+// Previously added models
+
+model Venue {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  locationId  String
+  location    Location  @relation(fields: [locationId], references: [id])
+  amenities   String[]
+  capacity    Int?
+  ownerId     String?
+  owner       Organizer? @relation("VenueOwner", fields: [ownerId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  jobs        Job[]
+  
+  // New relations
+  venueImages VenueImage[]
+  
+  // Additional relations
+  venueRooms  VenueRoom[]
+  venueAvailability VenueAvailability[]
+  venueEquipment VenueEquipment[]
+  venueNotes  VenueNote[]
+  venueContacts VenueContact[]
+  venueTags   VenueTag[]
+  venueRatings VenueRating[]
+  venueBookingRules VenueBookingRule[]
+}
+
+model Availability {
+  id        String   @id @default(cuid())
+  staffId   String
+  staff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  dayOfWeek Int      // 0-6 for Sunday-Saturday
+  startTime String   // Format: "HH:MM"
+  endTime   String   // Format: "HH:MM"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Certification {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  staffCertifications StaffCertification[]
+  jobCertifications   JobCertification[]
+  
+  // Additional relations
+  certificationCategories CertificationCategory[]
+  certificationRequirements CertificationRequirement[]
+  certificationMedia CertificationMedia[]
+}
+
+model StaffCertification {
+  id              String       @id @default(cuid())
+  staffId         String
+  staff           Staff        @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  certificationId String
+  certification   Certification @relation(fields: [certificationId], references: [id])
+  issueDate       DateTime
+  expiryDate      DateTime?
+  verificationUrl String?
+  isVerified      Boolean      @default(false)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  @@unique([staffId, certificationId])
+  
+  // Additional relations
+  certificationVerificationHistory CertificationVerificationHistory[]
+  certificationReminders CertificationReminder[]
+}
+
+model JobCertification {
+  id              String       @id @default(cuid())
+  jobId           Int
+  job             Job          @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  certificationId String
+  certification   Certification @relation(fields: [certificationId], references: [id])
+  
+  @@unique([jobId, certificationId])
+}
+
+model Skill {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  category    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  jobSkills   JobSkill[]
+  
+  // Additional relations
+  skillCategories SkillCategory[]
+  staffSkillLevels StaffSkillLevel[]
+  skillEndorsements SkillEndorsement[]
+}
+
+model JobSkill {
+  id        String   @id @default(cuid())
+  jobId     Int
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  skillId   String
+  skill     Skill    @relation(fields: [skillId], references: [id])
+  
+  @@unique([jobId, skillId])
+}
+
+model TimeEntry {
+  id        String   @id @default(cuid())
+  bookingId Int
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  clockIn   DateTime
+  clockOut  DateTime?
+  notes     String?
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Additional relations
+  timeEntryLocation TimeEntryLocation?
+  timeEntryApprovalHistory TimeEntryApprovalHistory[]
+  timeEntryMedia TimeEntryMedia[]
+  timeEntryNotes TimeEntryNote[]
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  bookingId     Int
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  amount        Float
+  paymentMethod String
+  status        String   // pending, completed, failed, refunded
+  transactionId String?
+  paidAt        DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Additional relations
+  paymentProvider PaymentProvider @default(STRIPE)
+  paymentNotes PaymentNote[]
+  paymentRefunds PaymentRefund[]
+  paymentDisputes PaymentDispute[]
+  paymentReceipts PaymentReceipt[]
+}
+
+model PortfolioItem {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  imageUrl    String?
+  videoUrl    String?
+  link        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  portfolioItemTags PortfolioItemTag[]
+  portfolioItemMedia PortfolioItemMedia[]
+  portfolioItemCategories PortfolioItemCategory[]
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // job_posted, application_received, booking_confirmed, etc.
+  title       String
+  message     String
+  isRead      Boolean  @default(false)
+  data        Json?    // Additional data related to the notification
+  createdAt   DateTime @default(now())
+  
+  // Additional relations
+  channel     NotificationChannel @default(IN_APP)
+  expiresAt   DateTime?
+  actionUrl   String?
+  actionLabel String?
+  sentAt      DateTime?
+  readAt      DateTime?
+  notificationDeliveryAttempts NotificationDeliveryAttempt[]
+}
+
+// New models
+
+// Messaging System
+model Message {
+  id          String        @id @default(cuid())
+  senderId    String
+  sender      User          @relation("MessageSender", fields: [senderId], references: [id])
+  receiverId  String
+  receiver    User          @relation("MessageReceiver", fields: [receiverId], references: [id])
+  content     String
+  status      MessageStatus @default(SENT)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  // Relations
+  conversation ConversationMessage[]
+  attachments  MessageAttachment[]
+  
+  // Additional relations
+  messageReactions MessageReaction[]
+  messageDeliveryStatus MessageDeliveryStatus[]
+  messageReadStatus MessageReadStatus[]
+}
+
+model Conversation {
+  id          String   @id @default(cuid())
+  name        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  participants ConversationParticipant[]
+  messages     ConversationMessage[]
+  
+  // Additional relations
+  conversationSettings ConversationSetting[]
+  conversationMeta ConversationMeta?
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  joinedAt       DateTime     @default(now())
+  leftAt         DateTime?
+  
+  @@unique([conversationId, userId])
+}
+
+model ConversationMessage {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  messageId      String
+  message        Message      @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  
+  @@unique([conversationId, messageId])
+}
+
+model MessageAttachment {
+  id        String   @id @default(cuid())
+  messageId String
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  fileUrl   String
+  fileName  String
+  fileType  String
+  fileSize  Int
+  createdAt DateTime @default(now())
+}
+
+// Subscription System
+model Subscription {
+  id            String          @id @default(cuid())
+  userId        String          @unique
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId        String
+  plan          SubscriptionPlan @relation(fields: [planId], references: [id])
+  tier          SubscriptionTier
+  startDate     DateTime
+  endDate       DateTime?
+  isActive      Boolean         @default(true)
+  autoRenew     Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  
+  // Relations
+  paymentHistory SubscriptionPayment[]
+  
+  // Additional relations
+  subscriptionFeatureAccess SubscriptionFeatureAccess[]
+  subscriptionNotes SubscriptionNote[]
+  subscriptionDiscounts SubscriptionDiscount[]
+  subscriptionUsage SubscriptionUsage[]
+}
+
+model SubscriptionPlan {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  tier        SubscriptionTier
+  price       Float
+  interval    String   // monthly, yearly
+  features    Json
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  subscriptions Subscription[]
+  
+  // Additional relations
+  planFeatures SubscriptionPlanFeature[]
+  planLimits SubscriptionPlanLimit[]
+}
+
+model SubscriptionPayment {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  amount         Float
+  paymentMethod  String
+  status         String       // pending, completed, failed, refunded
+  transactionId  String?
+  paidAt         DateTime?
+  createdAt      DateTime     @default(now())
+}
+
+// Document System
+model Document {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  fileUrl     String
+  fileName    String
+  fileType    String
+  fileSize    Int
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  applicationDocuments ApplicationDocument[]
+  contractDocuments    ContractDocument[]
+  
+  // Additional relations
+  documentVersions DocumentVersion[]
+  documentShares DocumentShare[]
+  documentTags DocumentTag[]
+  documentAccesses DocumentAccess[]
+  documentComments DocumentComment[]
+}
+
+model ApplicationDocument {
+  id            String     @id @default(cuid())
+  applicationId Int
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  documentId    String
+  document      Document   @relation(fields: [documentId], references: [id])
+  
+  @@unique([applicationId, documentId])
+}
+
+// Contract System
+model Contract {
+  id          String   @id @default(cuid())
+  jobId       Int
+  job         Job      @relation(fields: [jobId], references: [id])
+  bookingId   Int?
+  booking     Booking? @relation(fields: [bookingId], references: [id])
+  title       String
+  content     String
+  status      String   // draft, sent, signed, expired, cancelled
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  signatures  ContractSignature[]
+  documents   ContractDocument[]
+  
+  // Additional relations
+  contractVersions ContractVersion[]
+  contractNotes ContractNote[]
+  contractReminders ContractReminder[]
+  contractTerms ContractTerm[]
+}
+
+model ContractSignature {
+  id          String   @id @default(cuid())
+  contractId  String
+  contract    Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  userId      String
+  signedAt    DateTime
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+}
+
+model ContractDocument {
+  id          String   @id @default(cuid())
+  contractId  String
+  contract    Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  documentId  String
+  document    Document @relation(fields: [documentId], references: [id])
+  
+  @@unique([contractId, documentId])
+}
+
+// Invoice System
+model Invoice {
+  id            String   @id @default(cuid())
+  ownerId       String
+  owner         User     @relation("InvoiceOwner", fields: [ownerId], references: [id])
+  payerId       String
+  payer         User     @relation("InvoicePayer", fields: [payerId], references: [id])
+  bookingId     Int?
+  booking       Booking? @relation(fields: [bookingId], references: [id])
+  invoiceNumber String   @unique
+  amount        Float
+  tax           Float    @default(0)
+  dueDate       DateTime
+  status        String   // draft, sent, paid, overdue, cancelled
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  items         InvoiceItem[]
+  payments      InvoicePayment[]
+  
+  // Additional relations
+  invoiceHistory InvoiceHistory[]
+  invoiceReminders InvoiceReminder[]
+  invoiceAttachments InvoiceAttachment[]
+  invoiceNotes InvoiceNote[]
+}
+
+model InvoiceItem {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  description String
+  quantity    Float
+  unitPrice   Float
+  amount      Float
+  createdAt   DateTime @default(now())
+}
+
+model InvoicePayment {
+  id            String   @id @default(cuid())
+  invoiceId     String
+  invoice       Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  amount        Float
+  paymentMethod String
+  status        String   // pending, completed, failed, refunded
+  transactionId String?
+  paidAt        DateTime?
+  createdAt     DateTime @default(now())
+}
+
+// Dispute Resolution System
+model Dispute {
+  id              String   @id @default(cuid())
+  bookingId       Int
+  booking         Booking  @relation(fields: [bookingId], references: [id])
+  initiatorId     String
+  initiator       User     @relation("DisputeInitiator", fields: [initiatorId], references: [id])
+  responderId     String
+  responder       User     @relation("DisputeResponder", fields: [responderId], references: [id])
+  reason          String
+  description     String
+  status          String   // open, in_progress, resolved, closed
+  resolution      String?
+  resolutionDate  DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  messages        DisputeMessage[]
+  evidence        DisputeEvidence[]
+  
+  // Additional relations
+  disputeHistory DisputeHistory[]
+  disputeNotes DisputeNote[]
+  disputeAssignments DisputeAssignment[]
+}
+
+model DisputeMessage {
+  id          String   @id @default(cuid())
+  disputeId   String
+  dispute     Dispute  @relation(fields: [disputeId], references: [id], onDelete: Cascade)
+  senderId    String
+  message     String
+  createdAt   DateTime @default(now())
+}
+
+model DisputeEvidence {
+  id          String   @id @default(cuid())
+  disputeId   String
+  dispute     Dispute  @relation(fields: [disputeId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  fileUrl     String
+  fileName    String
+  fileType    String
+  uploadedAt  DateTime @default(now())
+}
+
+// Saved Items System
+model SavedJob {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobId     Int
+  job       Job      @relation(fields: [jobId], references: [id])
+  notes     String?
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, jobId])
+}
+
+model SavedProfile {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  staffId     String?
+  staff       Staff?    @relation(fields: [staffId], references: [id])
+  organizerId String?
+  organizer   Organizer? @relation(fields: [organizerId], references: [id])
+  notes       String?
+  createdAt   DateTime  @default(now())
+  
+  @@unique([userId, staffId, organizerId])
+}
+
+// Tags System
+model Tag {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  category    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  staffTags     StaffTag[]
+  organizerTags OrganizerTag[]
+  jobTags       JobTag[]
+  locationTags  LocationTag[]
+  venueTags     VenueTag[]
+  documentTags  DocumentTag[]
+  portfolioItemTags PortfolioItemTag[]
+}
+
+model StaffTag {
+  id        String   @id @default(cuid())
+  staffId   String
+  staff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  tagId     String
+  tag       Tag      @relation(fields: [tagId], references: [id])
+  
+  @@unique([staffId, tagId])
+}
+
+model OrganizerTag {
+  id          String    @id @default(cuid())
+  organizerId String
+  organizer   Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  tagId       String
+  tag         Tag       @relation(fields: [tagId], references: [id])
+  
+  @@unique([organizerId, tagId])
+}
+
+model JobTag {
+  id      String @id @default(cuid())
+  jobId   Int
+  job     Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  tagId   String
+  tag     Tag    @relation(fields: [tagId], references: [id])
+  
+  @@unique([jobId, tagId])
+}
+
+// Promotion System
+model Promotion {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  description String?
+  discountType String  // percentage, fixed
+  discountValue Float
+  startDate   DateTime
+  endDate     DateTime
+  maxUses     Int?
+  usedCount   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  jobPromotions JobPromotion[]
+  
+  // Additional relations
+  promotionRedemptions PromotionRedemption[]
+  promotionRules PromotionRule[]
+  promotionTargets PromotionTarget[]
+}
+
+model JobPromotion {
+  id          String   @id @default(cuid())
+  jobId       Int
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  promotionId String
+  promotion   Promotion @relation(fields: [promotionId], references: [id])
+  
+  @@unique([jobId, promotionId])
+}
+
+// Feedback System
+model Feedback {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  category    String
+  subject     String
+  message     String
+  status      String   @default("pending") // pending, in_review, resolved
+  response    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  feedbackAttachments FeedbackAttachment[]
+  feedbackResponses FeedbackResponse[]
+  feedbackVotes FeedbackVote[]
+}
+
+// Analytics System
+model LoginHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress   String?
+  userAgent   String?
+  device      String?
+  location    String?
+  status      String   // success, failed
+  createdAt   DateTime @default(now())
+}
+
+model PageView {
+  id          String   @id @default(cuid())
+  userId      String?
+  sessionId   String
+  page        String
+  referrer    String?
+  duration    Int?     // in seconds
+  createdAt   DateTime @default(now())
+  
+  // Additional relations
+  pageViewEvents PageViewEvent[]
+}
+
+// Add the ActivityLog model after the PageViewEvent model (around line 2300)
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action      String
+  entityType  String?
+  entityId    String?
+  metadata    Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+}
+
+model SearchQuery {
+  id          String   @id @default(cuid())
+  userId      String?
+  query       String
+  filters     Json?
+  resultCount Int?
+  createdAt   DateTime @default(now())
+  
+  // Additional relations
+  searchResults SearchResult[]
+}
+
+// Additional User-related Models
+model DeviceToken {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token       String   @unique
+  deviceType  String   // ios, android, web
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TaxInformation {
+  id          String   @id @default(cuid())
+  staffId     String   @unique
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  taxId       String?  // SSN, SIN, etc.
+  taxType     String?  // W2, 1099, T4, etc.
+  documents   Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BankDetail {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  bankName    String
+  accountType String
+  accountNumber String
+  routingNumber String
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BusinessDetail {
+  id          String    @id @default(cuid())
+  organizerId String    @unique
+  organizer   Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  businessName String
+  businessType String
+  taxId       String?
+  website     String?
+  foundedYear Int?
+  employeeCount Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// Additional Staff-related Models
+model EmergencyContact {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  name        String
+  relationship String
+  phone       String
+  email       String?
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model WorkHistory {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  company     String
+  position    String
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model EducationHistory {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  institution String
+  degree      String
+  field       String?
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Additional Booking-related Models
+model CheckIn {
+  id          String   @id @default(cuid())
+  bookingId   Int
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  latitude    Float?
+  longitude   Float?
+  timestamp   DateTime @default(now())
+  status      String   // checked_in, checked_out
+  notes       String?
+  createdAt   DateTime @default(now())
+  
+  // Additional relations
+  checkInPhotos CheckInPhoto[]
+  checkInVerification CheckInVerification?
+}
+
+model BookingNote {
+  id          String   @id @default(cuid())
+  bookingId   Int
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Additional Review-related Models
+model ReviewResponse {
+  id          String   @id @default(cuid())
+  reviewId    Int
+  review      Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ReviewImage {
+  id          String   @id @default(cuid())
+  reviewId    Int
+  review      Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  imageUrl    String
+  caption     String?
+  createdAt   DateTime @default(now())
+}
+
+// Additional Venue-related Models
+model VenueImage {
+  id          String   @id @default(cuid())
+  venueId     String
+  venue       Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  imageUrl    String
+  caption     String?
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+// System Configuration
+model SystemSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Platform Statistics
+model PlatformStatistic {
+  id          String   @id @default(cuid())
+  category    String
+  name        String
+  value       Float
+  date        DateTime @default(now())
+  
+  @@unique([category, name, date])
+}
+
+// Mobile-specific Models
+model UserDevice {
+  id              String        @id @default(cuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceId        String        @unique
+  deviceName      String?
+  deviceModel     String?
+  platform        DevicePlatform
+  osVersion       String?
+  appVersion      String?
+  pushToken       String?
+  lastActive      DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  // Additional relations
+  deviceSettings  UserDeviceSetting[]
+  deviceLocations UserDeviceLocation[]
+}
+
+model OfflineAction {
+  id          String     @id @default(cuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  actionType  String
+  actionData  Json
+  status      SyncStatus @default(PENDING)
+  createdAt   DateTime   @default(now())
+  syncedAt    DateTime?
+  errorMessage String?
+}
+
+model UserSession {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionToken String  @unique
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  lastActive  DateTime @default(now())
+  ipAddress   String?
+  userAgent   String?
+  deviceId    String?
+}
+
+// Shift Management
+model Shift {
+  id          String   @id @default(cuid())
+  jobId       Int
+  job         Job      @relation(fields: [jobId], references: [id])
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id])
+  startTime   DateTime
+  endTime     DateTime
+  status      String   // scheduled, in_progress, completed, cancelled
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  shiftNotes  ShiftNote[]
+  breakTimes  BreakTime[]
+  shiftTasks  ShiftTask[]
+  shiftReplacements ShiftReplacement[]
+  shiftRatings ShiftRating[]
+}
+
+model BreakTime {
+  id          String   @id @default(cuid())
+  shiftId     String
+  shift       Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id])
+  startTime   DateTime
+  endTime     DateTime?
+  duration    Int?     // in minutes
+  isPaid      Boolean  @default(false)
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Calendar and Scheduling
+model CalendarEvent {
+  id          String   @id @default(cuid())
+  ownerId     String
+  owner       User     @relation("EventOwner", fields: [ownerId], references: [id])
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  allDay      Boolean  @default(false)
+  location    String?
+  color       String?
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  attendees   CalendarEventAttendee[]
+  reminders   CalendarEventReminder[]
+  recurrence  CalendarEventRecurrence?
+}
+
+model CalendarEventAttendee {
+  id          String   @id @default(cuid())
+  eventId     String
+  event       CalendarEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  status      String   // invited, accepted, declined, tentative
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// User Preferences
+model UserPreference {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  key         String
+  value       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([userId, key])
+}
+
+// Staff Preferences
+model StaffPreference {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  key         String
+  value       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([staffId, key])
+}
+
+// Location Management
+model Geofence {
+  id          String   @id @default(cuid())
+  locationId  String
+  location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  name        String
+  radius      Float    // in meters
+  latitude    Float
+  longitude   Float
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  geofenceEvents GeofenceEvent[]
+}
+
+model UserLocation {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  locationId  String?
+  location    Location? @relation(fields: [locationId], references: [id])
+  latitude    Float
+  longitude   Float
+  accuracy    Float?
+  timestamp   DateTime @default(now())
+  
+  // Additional relations
+  userLocationEvents UserLocationEvent[]
+}
+
+// Media Management
+model UserMedia {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaType   MediaType
+  url         String
+  fileName    String
+  fileSize    Int
+  mimeType    String
+  width       Int?
+  height      Int?
+  duration    Int?      // for video/audio, in seconds
+  isPublic    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// Payroll and Financial
+model PayrollRecord {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id])
+  periodStart DateTime
+  periodEnd   DateTime
+  hoursWorked Float
+  regularPay  Float
+  overtimePay Float?
+  bonusPay    Float?
+  deductions  Float?
+  netPay      Float
+  status      String   // draft, approved, paid
+  paymentDate DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  payrollDeductions PayrollDeduction[]
+  payrollBonuses PayrollBonus[]
+  payrollNotes PayrollNote[]
+}
+
+// Wallet System
+model WalletTransaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount      Float
+  type        String   // deposit, withdrawal, transfer, payment
+  status      String   // pending, completed, failed, cancelled
+  reference   String?
+  description String?
+  createdAt   DateTime @default(now())
+  completedAt DateTime?
+}
+
+// Equipment Management
+model Equipment {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  category    String?
+  serialNumber String?
+  purchaseDate DateTime?
+  value       Float?
+  status      String   // available, in_use, maintenance, retired
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  equipmentAssignments EquipmentAssignment[]
+  equipmentMaintenance EquipmentMaintenance[]
+  venueEquipment VenueEquipment[]
+}
+
+model EquipmentAssignment {
+  id          String   @id @default(cuid())
+  equipmentId String
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id])
+  assignedAt  DateTime @default(now())
+  returnedAt  DateTime?
+  condition   String?
+  notes       String?
+}
+
+// Uniform Management
+model Uniform {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  size        String?
+  color       String?
+  status      String   // available, assigned, cleaning, retired
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  uniformAssignments UniformAssignment[]
+}
+
+model UniformAssignment {
+  id          String   @id @default(cuid())
+  uniformId   String
+  uniform     Uniform  @relation(fields: [uniformId], references: [id])
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id])
+  assignedAt  DateTime @default(now())
+  returnedAt  DateTime?
+  condition   String?
+  notes       String?
+}
+
+// Training and Certification
+model TrainingProgram {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  duration    Int?     // in hours
+  isRequired  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  trainingRecords TrainingRecord[]
+  trainingMaterials TrainingMaterial[]
+}
+
+model TrainingRecord {
+  id              String   @id @default(cuid())
+  staffId         String
+  staff           Staff    @relation(fields: [staffId], references: [id])
+  programId       String
+  program         TrainingProgram @relation(fields: [programId], references: [id])
+  startDate       DateTime
+  completionDate  DateTime?
+  status          String   // in_progress, completed, failed
+  score           Float?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// Department Management
+model Department {
+  id          String   @id @default(cuid())
+  organizerId String
+  organizer   Organizer @relation(fields: [organizerId], references: [id])
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  departmentManagers DepartmentManager[]
+  staffTeams StaffTeam[]
+}
+
+model DepartmentManager {
+  id            String   @id @default(cuid())
+  departmentId  String
+  department    Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  userId        String
+  startDate     DateTime @default(now())
+  endDate       DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Team Management
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  staffTeams  StaffTeam[]
+  teamLeaders TeamLeader[]
+}
+
+model StaffTeam {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id])
+  teamId      String
+  team        Team     @relation(fields: [teamId], references: [id])
+  departmentId String?
+  department  Department? @relation(fields: [departmentId], references: [id])
+  joinDate    DateTime @default(now())
+  leaveDate   DateTime?
+  
+  @@unique([staffId, teamId])
+}
+
+model TeamLeader {
+  id          String   @id @default(cuid())
+  teamId      String
+  team        Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId      String
+  startDate   DateTime @default(now())
+  endDate     DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Gamification
+model Achievement {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  icon        String?
+  points      Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  userAchievements UserAchievement[]
+}
+
+model UserAchievement {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  awardedAt     DateTime @default(now())
+  
+  @@unique([userId, achievementId])
+}
+
+model Badge {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  icon        String?
+  level       Int      @default(1)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  userBadges  UserBadge[]
+}
+
+model UserBadge {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId     String
+  badge       Badge    @relation(fields: [badgeId], references: [id])
+  awardedAt   DateTime @default(now())
+  
+  @@unique([userId, badgeId])
+}
+
+// Reward System
+model Reward {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  pointsCost  Int
+  isActive    Boolean  @default(true)
+  quantity    Int?
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  userRewards UserReward[]
+}
+
+model UserReward {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rewardId    String
+  reward      Reward   @relation(fields: [rewardId], references: [id])
+  redeemedAt  DateTime @default(now())
+  status      String   // pending, redeemed, expired
+  expiresAt   DateTime?
+}
+
+// Referral System
+model Referral {
+  id          String   @id @default(cuid())
+  referrerId  String
+  referrer    User     @relation("ReferrerRelation", fields: [referrerId], references: [id])
+  referredId  String   @unique
+  referred    User     @relation("ReferredRelation", fields: [referredId], references: [id])
+  code        String?
+  status      String   // pending, completed, rewarded
+  rewardAmount Float?
+  createdAt   DateTime @default(now())
+  completedAt DateTime?
+}
+
+// Support System
+model SupportTicket {
+  id          String   @id @default(cuid())
+  creatorId   String
+  creator     User     @relation("TicketCreator", fields: [creatorId], references: [id])
+  subject     String
+  description String
+  priority    String   // low, medium, high, urgent
+  status      String   // open, in_progress, resolved, closed
+  category    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  resolvedAt  DateTime?
+  
+  // Additional relations
+  responses   SupportResponse[]
+  attachments SupportAttachment[]
+  ticketNotes SupportTicketNote[]
+}
+
+model SupportResponse {
+  id          String   @id @default(cuid())
+  ticketId    String
+  ticket      SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  responderId String
+  responder   User     @relation(fields: [responderId], references: [id])
+  message     String
+  isInternal  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// API Management
+model ApiKey {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  key         String   @unique
+  permissions Json?
+  lastUsed    DateTime?
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  apiUsage    ApiUsage[]
+}
+
+model ApiUsage {
+  id          String   @id @default(cuid())
+  apiKeyId    String
+  apiKey      ApiKey   @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  endpoint    String
+  method      String
+  statusCode  Int
+  responseTime Int
+  timestamp   DateTime @default(now())
+}
+
+// User Verification
+model UserVerification {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // email, phone, identity, address
+  token       String?
+  verified    Boolean  @default(false)
+  attempts    Int      @default(0)
+  expiresAt   DateTime?
+  verifiedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// User Segmentation
+model UserSegment {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  segmentName String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([userId, segmentName])
+}
+
+// Content Management
+model ContentPage {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String
+  isPublished Boolean  @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  contentCategories ContentPageCategory[]
+  contentTags ContentPageTag[]
+}
+
+model ContentCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  contentPages ContentPageCategory[]
+}
+
+model ContentPageCategory {
+  id          String   @id @default(cuid())
+  pageId      String
+  page        ContentPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  categoryId  String
+  category    ContentCategory @relation(fields: [categoryId], references: [id])
+  
+  @@unique([pageId, categoryId])
+}
+
+model ContentTag {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  contentPages ContentPageTag[]
+}
+
+model ContentPageTag {
+  id          String   @id @default(cuid())
+  pageId      String
+  page        ContentPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  tagId       String
+  tag         ContentTag @relation(fields: [tagId], references: [id])
+  
+  @@unique([pageId, tagId])
+}
+
+// App Version Management
+model AppVersion {
+  id          String   @id @default(cuid())
+  version     String   @unique
+  platform    DevicePlatform
+  isRequired  Boolean  @default(false)
+  releaseNotes String?
+  releaseDate DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Additional models to support mobile functionality
+model UserNote {
+  id          String   @id @default(cuid())
+  subjectId   String
+  subject     User     @relation("NoteSubject", fields: [subjectId], references: [id])
+  creatorId   String
+  creator     User     @relation("NoteCreator", fields: [creatorId], references: [id])
+  content     String
+  isPrivate   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model StaffNote {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  isPrivate   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model StaffRating {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  raterId     String
+  category    String
+  rating      Int
+  comment     String?
+  createdAt   DateTime @default(now())
+}
+
+model StaffSkillLevel {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  skillId     String
+  skill       Skill    @relation(fields: [skillId], references: [id])
+  level       Int      // 1-5 or similar scale
+  verifiedBy  String?
+  verifiedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([staffId, skillId])
+}
+
+model ShiftNote {
+  id          String   @id @default(cuid())
+  shiftId     String
+  shift       Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  isPrivate   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ShiftTask {
+  id          String   @id @default(cuid())
+  shiftId     String
+  shift       Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      String   // pending, in_progress, completed
+  priority    String   // low, medium, high
+  dueTime     DateTime?
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ShiftReplacement {
+  id              String   @id @default(cuid())
+  shiftId         String
+  shift           Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  originalStaffId String
+  replacementStaffId String
+  reason          String?
+  status          String   // requested, approved, rejected, completed
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ShiftRating {
+  id          String   @id @default(cuid())
+  shiftId     String
+  shift       Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  raterId     String
+  rating      Int
+  comment     String?
+  createdAt   DateTime @default(now())
+}
+
+model StaffAvailabilityException {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  startDate   DateTime
+  endDate     DateTime
+  reason      String?
+  isAllDay    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model StaffLocation {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  locationId  String
+  location    Location @relation(fields: [locationId], references: [id])
+  distance    Float?   // in kilometers
+  travelTime  Int?     // in minutes
+  isPreferred Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([staffId, locationId])
+}
+
+model OrganizerLocation {
+  id          String   @id @default(cuid())
+  organizerId String
+  organizer   Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  locationId  String
+  location    Location @relation(fields: [locationId], references: [id])
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([organizerId, locationId])
+}
+
+model StaffSchedulePreference {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  maxHoursPerDay Int?
+  maxHoursPerWeek Int?
+  minHoursBetweenShifts Int?
+  preferredShiftLength Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model StaffPerformanceMetric {
+  id          String   @id @default(cuid())
+  staffId     String
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  metricName  String
+  metricValue Float
+  date        DateTime
+  createdAt   DateTime @default(now())
+}
+
+model VenueRoom {
+  id          String   @id @default(cuid())
+  venueId     String
+  venue       Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  name        String
+  capacity    Int?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model VenueAvailability {
+  id          String   @id @default(cuid())
+  venueId     String
+  venue       Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  dayOfWeek   Int      // 0-6 for Sunday-Saturday
+  openTime    String   // Format: "HH:MM"
+  closeTime   String   // Format: "HH:MM"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model VenueEquipment {
+  id          String   @id @default(cuid())
+  venueId     String
+  venue       Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  equipmentId String
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+  quantity    Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([venueId, equipmentId])
+}
+
+model VenueNote {
+  id          String   @id @default(cuid())
+  venueId     String
+  venue       Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model VenueContact {
+  id          String   @id @default(cuid())
+  venueId     String
+  venue       Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  name        String
+  position    String?
+  phone       String?
+  email       String?
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model VenueTag {
+  id          String   @id @default(cuid())
+  venueId     String
+  venue       Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  tagId       String
+  tag         Tag      @relation(fields: [tagId], references: [id])
+  
+  @@unique([venueId, tagId])
+}
+
+model VenueRating {
+  id          String   @id @default(cuid())
+  venueId     String
+  venue       Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  raterId     String
+  rating      Int
+  comment     String?
+  createdAt   DateTime @default(now())
+}
+
+model VenueBookingRule {
+  id          String   @id @default(cuid())
+  venueId     String
+  venue       Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  ruleType    String   // min_notice, max_duration, etc.
+  ruleValue   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JobMedia {
+  id          String   @id @default(cuid())
+  jobId       Int
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  mediaType   MediaType
+  url         String
+  caption     String?
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model JobNote {
+  id          String   @id @default(cuid())
+  jobId       Int
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JobRequirement {
+  id          String   @id @default(cuid())
+  jobId       Int
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  isRequired  Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JobQuestion {
+  id          String   @id @default(cuid())
+  jobId       Int
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  question    String
+  questionType String  // text, multiple_choice, yes_no
+  options     Json?    // For multiple choice questions
+  isRequired  Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Additional relations
+  responses   JobApplicantResponse[]
+}
+
+model JobApplicantResponse {
+  id            String     @id @default(cuid())
+  applicationId Int
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  questionId    String
+  question      JobQuestion @relation(fields: [questionId], references: [id])
+  jobId         Int
+  job           Job        @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  response      String?
+  createdAt     DateTime   @default(now())
+  
+  @@unique([applicationId, questionId])
+}
+
+model JobVisibility {
+  id          String   @id @default(cuid())
+  jobId       Int
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  visibleTo   String   // public, private, specific_staff
+  targetIds   Json?    // Array of staff IDs if visibleTo is specific_staff
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JobNotification {
+  id          String   @id @default(cuid())
+  jobId       Int
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  title       String
+  message     String
+  sentAt      DateTime @default(now())
+  sentToCount Int      @default(0)
+}
+
+model JobMetric {
+  id          String   @id @default(cuid())
+  jobId       Int
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  metricName  String
+  metricValue Float
+  date        DateTime @default(now())
+}
+
+model JobFeedback {
+  id          String   @id @default(cuid())
+  jobId       Int
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  userId      String
+  rating      Int
+  comment     String?
+  createdAt   DateTime @default(now())
+}
+
+model ApplicationNote {
+  id            String     @id @default(cuid())
+  applicationId Int
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  authorId      String
+  content       String
+  isPrivate     Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model ApplicationStatusHistory {
+  id            String     @id @default(cuid())
+  applicationId Int
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  status        String
+  changedById   String
+  notes         String?
+  createdAt     DateTime   @default(now())
+}
+
+model ApplicationRating {
+  id            String     @id @default(cuid())
+  applicationId Int
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  raterId       String
+  rating        Int
+  comment       String?
+  createdAt     DateTime   @default(now())
+}
+
+model BookingStatusHistory {
+  id          String   @id @default(cuid())
+  bookingId   Int
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  status      String
+  changedById String
+  notes       String?
+  createdAt   DateTime @default(now())
+}
+
+model BookingMedia {
+  id          String   @id @default(cuid())
+  bookingId   Int
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  mediaType   MediaType
+  url         String
+  caption     String?
+  createdAt   DateTime @default(now())
+}
+
+model BookingExpense {
+  id          String   @id @default(cuid())
+  bookingId   Int
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  description String
+  amount      Float
+  receiptUrl  String?
+  status      String   // pending, approved, rejected
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BookingReminder {
+  id          String   @id @default(cuid())
+  bookingId   Int
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  reminderType String  // pre_shift, post_shift, etc.
+  message     String
+  sendAt      DateTime
+  sentAt      DateTime?
+  status      String   // pending, sent, failed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BookingFeedback {
+  id          String   @id @default(cuid())
+  bookingId   Int
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  userId      String
+  rating      Int
+  comment     String?
+  createdAt   DateTime @default(now())
+}
+
+model BookingCommunication {
+  id          String   @id @default(cuid())
+  bookingId   Int
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  senderId    String
+  receiverId  String
+  message     String
+  createdAt   DateTime @default(now())
+}
+
+model ReviewCategory {
+  id          String   @id @default(cuid())
+  reviewId    Int
+  review      Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  category    String
+  rating      Int
+  
+  @@unique([reviewId, category])
+}
+
+model ReviewHelpful {
+  id          String   @id @default(cuid())
+  reviewId    Int
+  review      Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  userId      String
+  isHelpful   Boolean
+  createdAt   DateTime @default(now())
+  
+  @@unique([reviewId, userId])
+}
+
+model ReviewFlag {
+  id          String   @id @default(cuid())
+  reviewId    Int
+  review      Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  userId      String
+  reason      String
+  status      String   // pending, reviewed, removed, kept
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CheckInPhoto {
+  id          String   @id @default(cuid())
+  checkInId   String
+  checkIn     CheckIn  @relation(fields: [checkInId], references: [id], onDelete: Cascade)
+  photoUrl    String
+  createdAt   DateTime @default(now())
+}
+
+model CheckInVerification {
+  id          String   @id @default(cuid())
+  checkInId   String   @unique
+  checkIn     CheckIn  @relation(fields: [checkInId], references: [id], onDelete: Cascade)
+  verifierId  String
+  isVerified  Boolean  @default(false)
+  notes       String?
+  verifiedAt  DateTime?
+  createdAt   DateTime @default(now())
+}
+
+model LocationNote {
+  id          String   @id @default(cuid())
+  locationId  String
+  location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model LocationMedia {
+  id          String   @id @default(cuid())
+  locationId  String
+  location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  mediaType   MediaType
+  url         String
+  caption     String?
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model LocationHour {
+  id          String   @id @default(cuid())
+  locationId  String
+  location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  dayOfWeek   Int      // 0-6 for Sunday-Saturday
+  openTime    String   // Format: "HH:MM"
+  closeTime   String   // Format: "HH:MM"
+  isClosed    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model LocationAmenity {
+  id          String   @id @default(cuid())
+  locationId  String
+  location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model LocationTag {
+  id          String   @id @default(cuid())
+  locationId  String
+  location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  tagId       String
+  tag         Tag      @relation(fields: [tagId], references: [id])
+  
+  @@unique([locationId, tagId])
+}
+
+model MessageReaction {
+  id          String   @id @default(cuid())
+  messageId   String
+  message     Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  userId      String
+  reaction    String
+  createdAt   DateTime @default(now())
+  
+  @@unique([messageId, userId])
+}
+
+model MessageDeliveryStatus {
+  id          String   @id @default(cuid())
+  messageId   String
+  message     Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  userId      String
+  status      MessageStatus
+  updatedAt   DateTime @default(now())
+  
+  @@unique([messageId, userId])
+}
+
+model MessageReadStatus {
+  id          String   @id @default(cuid())
+  messageId   String
+  message     Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  userId      String
+  readAt      DateTime @default(now())
+  
+  @@unique([messageId, userId])
+}
+
+model ConversationSetting {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  key            String
+  value          String
+  
+  @@unique([conversationId, key])
+}
+
+model ConversationMeta {
+  id             String       @id @default(cuid())
+  conversationId String       @unique
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  lastMessageAt  DateTime?
+  messageCount   Int          @default(0)
+  participantCount Int        @default(0)
+  updatedAt      DateTime     @default(now())
+}
+
+model SubscriptionFeatureAccess {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  featureKey     String
+  hasAccess      Boolean      @default(true)
+  
+  @@unique([subscriptionId, featureKey])
+}
+
+model SubscriptionPlanFeature {
+  id          String   @id @default(cuid())
+  planId      String
+  plan        SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  featureKey  String
+  featureName String
+  description String?
+  
+  @@unique([planId, featureKey])
+}
+
+model SubscriptionPlanLimit {
+  id          String   @id @default(cuid())
+  planId      String
+  plan        SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  limitKey    String
+  limitValue  Int
+  
+  @@unique([planId, limitKey])
+}
+
+model SubscriptionNote {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  authorId       String
+  content        String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model SubscriptionDiscount {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  discountType   String       // percentage, fixed
+  discountValue  Float
+  reason         String?
+  startDate      DateTime     @default(now())
+  endDate        DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model SubscriptionUsage {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  featureKey     String
+  usageCount     Int          @default(0)
+  period         String       // monthly, yearly
+  periodStart    DateTime
+  periodEnd      DateTime
+  
+  @@unique([subscriptionId, featureKey, periodStart])
+}
+
+model DocumentVersion {
+  id          String   @id @default(cuid())
+  documentId  String
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  version     Int
+  fileUrl     String
+  fileName    String
+  fileSize    Int
+  createdById String
+  createdAt   DateTime @default(now())
+}
+
+model DocumentShare {
+  id          String   @id @default(cuid())
+  documentId  String
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  sharedWith  String
+  accessLevel String   // view, edit, admin
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime?
+}
+
+model DocumentTag {
+  id          String   @id @default(cuid())
+  documentId  String
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  tagId       String
+  tag         Tag      @relation(fields: [tagId], references: [id])
+  
+  @@unique([documentId, tagId])
+}
+
+model DocumentAccess {
+  id          String   @id @default(cuid())
+  documentId  String
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId      String
+  accessType  String   // view, download, edit
+  accessedAt  DateTime @default(now())
+}
+
+model DocumentComment {
+  id          String   @id @default(cuid())
+  documentId  String
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ContractVersion {
+  id          String   @id @default(cuid())
+  contractId  String
+  contract    Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  version     Int
+  content     String
+  createdById String
+  createdAt   DateTime @default(now())
+}
+
+model ContractNote {
+  id          String   @id @default(cuid())
+  contractId  String
+  contract    Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ContractReminder {
+  id          String   @id @default(cuid())
+  contractId  String
+  contract    Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  reminderType String  // signature_needed, expiring_soon, etc.
+  message     String
+  sendAt      DateTime
+  sentAt      DateTime?
+  status      String   // pending, sent, failed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ContractTerm {
+  id          String   @id @default(cuid())
+  contractId  String
+  contract    Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  title       String
+  content     String
+  isRequired  Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model InvoiceHistory {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  status      String
+  changedById String
+  notes       String?
+  createdAt   DateTime @default(now())
+}
+
+model InvoiceReminder {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  reminderType String  // due_soon, overdue, etc.
+  message     String
+  sendAt      DateTime
+  sentAt      DateTime?
+  status      String   // pending, sent, failed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model InvoiceAttachment {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  fileUrl     String
+  fileName    String
+  fileSize    Int
+  createdAt   DateTime @default(now())
+}
+
+model InvoiceNote {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DisputeHistory {
+  id          String   @id @default(cuid())
+  disputeId   String
+  dispute     Dispute  @relation(fields: [disputeId], references: [id], onDelete: Cascade)
+  status      String
+  changedById String
+  notes       String?
+  createdAt   DateTime @default(now())
+}
+
+model DisputeNote {
+  id          String   @id @default(cuid())
+  disputeId   String
+  dispute     Dispute  @relation(fields: [disputeId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DisputeAssignment {
+  id          String   @id @default(cuid())
+  disputeId   String
+  dispute     Dispute  @relation(fields: [disputeId], references: [id], onDelete: Cascade)
+  assigneeId  String
+  assignedAt  DateTime @default(now())
+  resolvedAt  DateTime?
+}
+
+model PromotionRedemption {
+  id          String   @id @default(cuid())
+  promotionId String
+  promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  userId      String
+  redeemedAt  DateTime @default(now())
+}
+
+model PromotionRule {
+  id          String   @id @default(cuid())
+  promotionId String
+  promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  ruleType    String   // min_spend, specific_job_type, etc.
+  ruleValue   String
+}
+
+model PromotionTarget {
+  id          String   @id @default(cuid())
+  promotionId String
+  promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  targetType  String   // all, specific_users, new_users, etc.
+  targetValue Json?    // Array of user IDs if targetType is specific_users
+}
+
+model FeedbackAttachment {
+  id          String   @id @default(cuid())
+  feedbackId  String
+  feedback    Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  fileUrl     String
+  fileName    String
+  fileSize    Int
+  createdAt   DateTime @default(now())
+}
+
+model FeedbackResponse {
+  id          String   @id @default(cuid())
+  feedbackId  String
+  feedback    Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  responderId String
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FeedbackVote {
+  id          String   @id @default(cuid())
+  feedbackId  String
+  feedback    Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  userId      String
+  isUpvote    Boolean
+  createdAt   DateTime @default(now())
+  
+  @@unique([feedbackId, userId])
+}
+
+model PageViewEvent {
+  id          String   @id @default(cuid())
+  pageViewId  String
+  pageView    PageView @relation(fields: [pageViewId], references: [id], onDelete: Cascade)
+  eventType   String
+  eventData   Json?
+  timestamp   DateTime @default(now())
+}
+
+model SearchResult {
+  id          String   @id @default(cuid())
+  searchId    String
+  search      SearchQuery @relation(fields: [searchId], references: [id], onDelete: Cascade)
+  resultType  String
+  resultId    String
+  position    Int
+  clicked     Boolean  @default(false)
+  clickedAt   DateTime?
+}
+
+model UserDeviceSetting {
+  id          String   @id @default(cuid())
+  deviceId    String
+  device      UserDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  key         String
+  value       String
+  
+  @@unique([deviceId, key])
+}
+
+model UserDeviceLocation {
+  id          String   @id @default(cuid())
+  deviceId    String
+  device      UserDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  latitude    Float
+  longitude   Float
+  accuracy    Float?
+  timestamp   DateTime @default(now())
+}
+
+model TimeEntryLocation {
+  id          String   @id @default(cuid())
+  timeEntryId String   @unique
+  timeEntry   TimeEntry @relation(fields: [timeEntryId], references: [id], onDelete: Cascade)
+  latitude    Float
+  longitude   Float
+  accuracy    Float?
+  timestamp   DateTime @default(now())
+}
+
+model TimeEntryApprovalHistory {
+  id          String   @id @default(cuid())
+  timeEntryId String
+  timeEntry   TimeEntry @relation(fields: [timeEntryId], references: [id], onDelete: Cascade)
+  status      Boolean
+  approvedById String
+  notes       String?
+  createdAt   DateTime @default(now())
+}
+
+model TimeEntryMedia {
+  id          String   @id @default(cuid())
+  timeEntryId String
+  timeEntry   TimeEntry @relation(fields: [timeEntryId], references: [id], onDelete: Cascade)
+  mediaType   MediaType
+  url         String
+  caption     String?
+  createdAt   DateTime @default(now())
+}
+
+model TimeEntryNote {
+  id          String   @id @default(cuid())
+  timeEntryId String
+  timeEntry   TimeEntry @relation(fields: [timeEntryId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PaymentNote {
+  id          String   @id @default(cuid())
+  paymentId   String
+  payment     Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PaymentRefund {
+  id          String   @id @default(cuid())
+  paymentId   String
+  payment     Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  amount      Float
+  reason      String?
+  status      String   // pending, completed, failed
+  refundedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PaymentDispute {
+  id          String   @id @default(cuid())
+  paymentId   String
+  payment     Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  reason      String
+  status      String   // open, resolved, closed
+  resolution  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PaymentReceipt {
+  id          String   @id @default(cuid())
+  paymentId   String
+  payment     Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  receiptUrl  String
+  sentAt      DateTime?
+  createdAt   DateTime @default(now())
+}
+
+model PortfolioItemTag {
+  id              String   @id @default(cuid())
+  portfolioItemId String
+  portfolioItem   PortfolioItem @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  tagId           String
+  tag             Tag      @relation(fields: [tagId], references: [id])
+  
+  @@unique([portfolioItemId, tagId])
+}
+
+model PortfolioItemMedia {
+  id              String   @id @default(cuid())
+  portfolioItemId String
+  portfolioItem   PortfolioItem @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  mediaType       MediaType
+  url             String
+  caption         String?
+  isPrimary       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+}
+
+model PortfolioItemCategory {
+  id              String   @id @default(cuid())
+  portfolioItemId String
+  portfolioItem   PortfolioItem @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  category        String
+}
+
+model NotificationDeliveryAttempt {
+  id              String   @id @default(cuid())
+  notificationId  String
+  notification    Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  channel         NotificationChannel
+  status          String   // success, failed
+  errorMessage    String?
+  attemptedAt     DateTime @default(now())
+}
+
+model GeofenceEvent {
+  id          String   @id @default(cuid())
+  geofenceId  String
+  geofence    Geofence @relation(fields: [geofenceId], references: [id], onDelete: Cascade)
+  userId      String
+  eventType   String   // enter, exit
+  timestamp   DateTime @default(now())
+}
+
+model UserLocationEvent {
+  id              String   @id @default(cuid())
+  userLocationId  String
+  userLocation    UserLocation @relation(fields: [userLocationId], references: [id], onDelete: Cascade)
+  eventType       String   // check_in, check_out, break_start, break_end
+  timestamp       DateTime @default(now())
+}
+
+model PayrollDeduction {
+  id              String   @id @default(cuid())
+  payrollRecordId String
+  payrollRecord   PayrollRecord @relation(fields: [payrollRecordId], references: [id], onDelete: Cascade)
+  description     String
+  amount          Float
+  createdAt       DateTime @default(now())
+}
+
+model PayrollBonus {
+  id              String   @id @default(cuid())
+  payrollRecordId String
+  payrollRecord   PayrollRecord @relation(fields: [payrollRecordId], references: [id], onDelete: Cascade)
+  description     String
+  amount          Float
+  createdAt       DateTime @default(now())
+}
+
+model PayrollNote {
+  id              String   @id @default(cuid())
+  payrollRecordId String
+  payrollRecord   PayrollRecord @relation(fields: [payrollRecordId], references: [id], onDelete: Cascade)
+  authorId        String
+  content         String
+  isPrivate       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model EquipmentMaintenance {
+  id              String   @id @default(cuid())
+  equipmentId     String
+  equipment       Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  description     String
+  maintenanceDate DateTime
+  cost            Float?
+  performedBy     String?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model TrainingMaterial {
+  id              String   @id @default(cuid())
+  programId       String
+  program         TrainingProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  title           String
+  description     String?
+  fileUrl         String?
+  videoUrl        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model SkillCategory {
+  id          String   @id @default(cuid())
+  skillId     String
+  skill       Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  category    String
+  
+  @@unique([skillId, category])
+}
+
+model SkillEndorsement {
+  id          String   @id @default(cuid())
+  skillId     String
+  skill       Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  endorserId  String
+  endorsedId  String
+  createdAt   DateTime @default(now())
+  
+  @@unique([skillId, endorserId, endorsedId])
+}
+
+model CertificationCategory {
+  id              String   @id @default(cuid())
+  certificationId String
+  certification   Certification @relation(fields: [certificationId], references: [id], onDelete: Cascade)
+  category        String
+  
+  @@unique([certificationId, category])
+}
+
+model CertificationRequirement {
+  id              String   @id @default(cuid())
+  certificationId String
+  certification   Certification @relation(fields: [certificationId], references: [id], onDelete: Cascade)
+  requirement     String
+  isRequired      Boolean  @default(true)
+}
+
+model CertificationMedia {
+  id              String   @id @default(cuid())
+  certificationId String
+  certification   Certification @relation(fields: [certificationId], references: [id], onDelete: Cascade)
+  mediaType       MediaType
+  url             String
+  caption         String?
+  createdAt       DateTime @default(now())
+}
+
+model CertificationVerificationHistory {
+  id                      String   @id @default(cuid())
+  staffCertificationId    String
+  staffCertification      StaffCertification @relation(fields: [staffCertificationId], references: [id], onDelete: Cascade)
+  verifiedById            String
+  status                  Boolean
+  notes                   String?
+  createdAt               DateTime @default(now())
+}
+
+model CertificationReminder {
+  id                      String   @id @default(cuid())
+  staffCertificationId    String
+  staffCertification      StaffCertification @relation(fields: [staffCertificationId], references: [id], onDelete: Cascade)
+  reminderType            String   // expiring_soon, expired
+  message                 String
+  sendAt                  DateTime
+  sentAt                  DateTime?
+  status                  String   // pending, sent, failed
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+}
+
+model CalendarEventReminder {
+  id          String   @id @default(cuid())
+  eventId     String
+  event       CalendarEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  reminderType String   // email, push, sms
+  timeBeforeEvent Int   // in minutes
+  message     String?
+  sentAt      DateTime?
+  status      String   // pending, sent, failed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CalendarEventRecurrence {
+  id          String   @id @default(cuid())
+  eventId     String   @unique
+  event       CalendarEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  frequency   String   // daily, weekly, monthly, yearly
+  interval    Int      @default(1)
+  endDate     DateTime?
+  count       Int?
+  daysOfWeek  String?  // comma-separated list of days (0-6)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SupportAttachment {
+  id          String   @id @default(cuid())
+  ticketId    String
+  ticket      SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  fileUrl     String
+  fileName    String
+  fileSize    Int
+  createdAt   DateTime @default(now())
+}
+
+model SupportTicketNote {
+  id          String   @id @default(cuid())
+  ticketId    String
+  ticket      SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorId    String
+  content     String
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model OrganizerSetting {
+  id          String   @id @default(cuid())
+  organizerId String
+  organizer   Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  key         String
+  value       String
+  
+  @@unique([organizerId, key])
+}
+
+model OrganizerDocument {
+  id          String   @id @default(cuid())
+  organizerId String
+  organizer   Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  title       String
+  fileUrl     String
+  fileName    String
+  fileType    String
+  fileSize    Int
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model OrganizerContact {
+  id          String   @id @default(cuid())
+  organizerId String
+  organizer   Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  name        String
+  position    String?
+  phone       String?
+  email       String?
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model OrganizerBranding {
+  id          String   @id @default(cuid())
+  organizerId String   @unique
+  organizer   Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  logoUrl     String?
+  primaryColor String?
+  secondaryColor String?
+  fontFamily  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model EventTemplate {
+  id          String   @id @default(cuid())
+  organizerId String
+  organizer   Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  duration    Int
+  staffingRequirements Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model StaffingRequirement {
+  id          String   @id @default(cuid())
+  organizerId String
+  organizer   Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  jobId       Int?
+  job         Job?     @relation(fields: [jobId], references: [id])
+  role        String
+  count       Int
+  hourlyRate  Float?
+  skills      Json?
+  certifications Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
