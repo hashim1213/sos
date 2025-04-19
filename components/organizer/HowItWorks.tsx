@@ -1,4 +1,4 @@
-import { ClipboardList, Search, Calendar, ThumbsUp } from 'lucide-react';
+import { ClipboardList, Search, ThumbsUp } from 'lucide-react';
 
 const HowItWorks = () => {
   return (
@@ -7,7 +7,7 @@ const HowItWorks = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4 text-gray-900">How SOS Works for Businesses</h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            A simple 3-step process to find reliable staff for any industry, whether it's events, construction, retail, or more
+            A simple 3-step process to find reliable staff for any industry, whether it&rsquo;s events, construction, retail, or more
           </p>
         </div>
 
@@ -44,7 +44,7 @@ const HowItWorks = () => {
                     <ThumbsUp size={28} />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Confirm & Relax</h3>
-                  <p className="text-gray-700">Select your team, confirm your booking, and we'll handle the rest—including payments.</p>
+                  <p className="text-gray-700">Select your team, confirm your booking, and we&rsquo;ll handle the rest—including payments.</p>
                 </div>
               </div>
             </div>
@@ -81,7 +81,7 @@ const HowItWorks = () => {
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-2 text-gray-900">Confirm & Relax</h3>
-                <p className="text-gray-700">Select your team, confirm your booking, and we'll handle the rest—including payments.</p>
+                <p className="text-gray-700">Select your team, confirm your booking, and we&rsquo;ll handle the rest—including payments.</p>
               </div>
             </div>
           </div>

@@ -11,7 +11,7 @@ interface LayoutProps {
   setUserPath: (path: UserPathType) => void;
 }
 
-const Layout = ({ children, userPath, setUserPath }: LayoutProps) => {
+const Layout = ({ children, setUserPath }: Omit<LayoutProps, 'userPath'>) => {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
