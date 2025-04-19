@@ -1,8 +1,8 @@
 'use client';
 
-import { Building2, UserCircle, Search, User, Calendar } from 'lucide-react';
+import { Building2, UserCircle, Search, User, Calendar, MapPin, Check, X, Globe } from 'lucide-react';
 import { UserPathType } from '../../types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface HeroProps {
   userPath: UserPathType;
@@ -10,8 +10,34 @@ interface HeroProps {
 }
 
 const Hero = ({ userPath, setUserPath }: HeroProps) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [location, setLocation] = useState('');
   const [activeTab, setActiveTab] = useState<'professionals' | 'organizers'>('professionals');
+  const [isChecking, setIsChecking] = useState(false);
+  const [checkComplete, setCheckComplete] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(false);
+
+  const checkAvailability = () => {
+    if (!location.trim()) return;
+    
+    setIsChecking(true);
+    setCheckComplete(false);
+    
+    // Simulate a check process
+    setTimeout(() => {
+      // Check if the location contains Manitoba or Winnipeg (case insensitive)
+      const isInManitoba = location.toLowerCase().includes('manitoba') || 
+                           location.toLowerCase().includes('winnipeg');
+      
+      setIsAvailable(isInManitoba);
+      setCheckComplete(true);
+      setIsChecking(false);
+    }, 2500); // Animation runs for 2.5 seconds
+  };
+
+  // Reset the check when location changes
+  useEffect(() => {
+    setCheckComplete(false);
+  }, [location]);
 
   return (
     <section className="bg-white py-12 md:py-20 overflow-hidden">
@@ -57,94 +83,92 @@ const Hero = ({ userPath, setUserPath }: HeroProps) => {
               </div>
             </div>
             
-            {/* Search component - right side */}
+            {/* Availability checker - right side */}
             <div className="w-full lg:w-1/2 relative">
               <div className="relative">
                 <div className="absolute -top-10 -left-10 w-40 h-40 bg-red-100 rounded-full opacity-50"></div>
                 <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-red-200 rounded-full opacity-50"></div>
                 
-                {/* Search component */}
+                {/* Availability checker component */}
                 <div className="relative z-10 bg-white rounded-xl shadow-xl p-6">
                   <div className="text-2xl font-bold text-gray-900 mb-6">
-                    Find Your Perfect Shifter
+                    Is SOS Available In Your Area?
                   </div>
                   
-                  {/* Tab Navigation */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <button 
-                      className={`flex items-center justify-center p-3 rounded-lg ${
-                        activeTab === 'professionals' 
-                          ? 'bg-white border border-gray-200 shadow-sm' 
-                          : 'bg-gray-50 hover:bg-gray-100'
-                      } transition`}
-                      onClick={() => setActiveTab('professionals')}
-                    >
-                      <User className="mr-2 text-gray-700" size={20} />
-                      <span className="font-medium text-gray-700">Shifters</span>
-                    </button>
-                    <button 
-                      className={`flex items-center justify-center p-3 rounded-lg ${
-                        activeTab === 'organizers' 
-                          ? 'bg-white border border-gray-200 shadow-sm' 
-                          : 'bg-gray-50 hover:bg-gray-100'
-                      } transition`}
-                      onClick={() => setActiveTab('organizers')}
-                    >
-                      <Calendar className="mr-2 text-gray-700" size={20} />
-                      <span className="font-medium text-gray-700">Organizers</span>
-                    </button>
-                  </div>
-                  
-                  {/* Search Input */}
-                  <div className="relative mb-6">
+                  {/* Location Input */}
+                  <div className="relative mb-6 text-gray-700">
                     <input
                       type="text"
-                      placeholder={activeTab === 'professionals' 
-                        ? "Search for bartenders, servers, security staff..." 
-                        : "Search for venues, events, staff needs..."}
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full py-3 px-4 pr-24 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      placeholder="Enter your city or region..."
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      className="w-full py-3 px-4 pl-10 pr-24 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
-                    <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg flex items-center transition">
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                    <button 
+                      onClick={checkAvailability}
+                      disabled={isChecking || !location.trim()}
+                      className={`absolute right-2 top-1/2 transform -translate-y-1/2 ${
+                        isChecking || !location.trim() ? 'bg-gray-400' : 'bg-red-600 hover:bg-red-700'
+                      } text-white p-2 rounded-lg flex items-center transition`}
+                    >
                       <Search size={18} className="mr-1" />
-                      <span className="font-medium">Search</span>
+                      <span className="font-medium">Check</span>
                     </button>
                   </div>
                   
-                  {/* Popular Searches */}
-                  <div className="flex flex-wrap items-center">
-                    <span className="text-gray-600 mr-3">Popular:</span>
-                    <div className="flex flex-wrap gap-2">
-                      <button className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 text-sm transition">
-                        Bartender
-                      </button>
-                      <button className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 text-sm transition">
-                        Server
-                      </button>
-                      <button className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 text-sm transition">
-                        Security
-                      </button>
-                      <button className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 text-sm transition">
-                        AV Technician
-                      </button>
-                    </div>
+                  {/* Animation and Results */}
+                  <div className="min-h-[120px]">
+                    {isChecking && (
+                      <div className="flex flex-col items-center justify-center py-4">
+                        <div className="relative">
+                          <Globe className="animate-pulse text-red-600" size={48} />
+                          <div className="absolute top-0 left-0 w-full h-full">
+                            <div className="w-12 h-12 border-t-2 border-red-600 rounded-full animate-spin"></div>
+                          </div>
+                        </div>
+                        <p className="mt-4 text-gray-700">Checking availability worldwide...</p>
+                      </div>
+                    )}
+                    
+                    {checkComplete && (
+                      <div className={`p-4 rounded-lg ${isAvailable ? 'bg-green-50' : 'bg-red-50'} mt-2`}>
+                        <div className="flex items-start">
+                          <div className={`p-2 rounded-full ${isAvailable ? 'bg-green-100' : 'bg-red-100'} mr-3`}>
+                            {isAvailable ? (
+                              <Check className={`h-5 w-5 ${isAvailable ? 'text-green-600' : 'text-red-600'}`} />
+                            ) : (
+                              <X className="h-5 w-5 text-red-600" />
+                            )}
+                          </div>
+                          <div>
+                            {isAvailable ? (
+                              <>
+                                <p className="font-medium text-gray-900">Available in your area!</p>
+                                <p className="text-sm text-gray-600">SOS is available in Manitoba, Canada.</p>
+                              </>
+                            ) : (
+                              <>
+                                <p className="font-medium text-gray-900">Not yet available</p>
+                                <p className="text-sm text-gray-600">SOS is currently only available in Manitoba, Canada.</p>
+                                <p className="text-sm font-medium text-red-600 mt-2">Coming soon to more locations!</p>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {!isChecking && !checkComplete && (
+                      <div className="p-4 text-center text-gray-600">
+                        <MapPin className="mx-auto mb-2" size={24} />
+                        <p>Currently serving Manitoba, Canada with more locations coming soon!</p>
+                      </div>
+                    )}
                   </div>
                   
                   {/* Floating card - cost savings */}
-                  <div className="absolute -bottom-5 -left-5 bg-white p-4 rounded-lg shadow-lg">
-                    <div className="flex items-center">
-                      <div className="bg-red-100 p-2 rounded-full mr-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-600" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M6 3a1 1 0 011-1h.01a1 1 0 010 2H7a1 1 0 01-1-1zm2 3a1 1 0 00-2 0v1a2 2 0 00-2 2v1a2 2 0 002 2h6a2 2 0 002-2v-1a2 2 0 00-2-2V6a1 1 0 10-2 0v1H8V6zm10 8a1 1 0 01-1 1H3a1 1 0 110-2h14a1 1 0 011 1z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900">26% cost savings</p>
-                        <p className="text-sm text-gray-600">vs traditional agencies</p>
-                      </div>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
             </div>
