@@ -1,6 +1,6 @@
 'use client';
 
-import { Building2, UserCircle, Search, User, Calendar, MapPin, Check, X, Globe } from 'lucide-react';
+import { Building2, UserCircle, Search, MapPin, Check, X, Globe } from 'lucide-react';
 import { UserPathType } from '../../types';
 import { useState, useEffect } from 'react';
 
@@ -11,7 +11,6 @@ interface HeroProps {
 
 const Hero = ({ userPath, setUserPath }: HeroProps) => {
   const [location, setLocation] = useState('');
-  const [activeTab, setActiveTab] = useState<'professionals' | 'organizers'>('professionals');
   const [isChecking, setIsChecking] = useState(false);
   const [checkComplete, setCheckComplete] = useState(false);
   const [isAvailable, setIsAvailable] = useState(false);
